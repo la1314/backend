@@ -1,4 +1,6 @@
 const connection = require('../models/db.model.js');
+const jwt = require('jsonwebtoken');
+const secret = 'mysecretsshhh';
 
 // Obtiene datos para la página de la obra
 exports.findObraInfo = (req, res) => {
@@ -13,7 +15,7 @@ exports.findObraInfo = (req, res) => {
    * Cover
    * Lanzamiento
    */
-  const obra = req.query.id;
+  const { id: obra } = req.query
   const query = `SELECT
                   O.NOMBRE, AUTOR, DESCRIPCION, D.NOMBRE AS DEMOGRAFIA, COVER, LANZAMIENTO, AVG(PUNTOS)
                   FROM OBRAS O 
@@ -44,7 +46,7 @@ exports.findSocialMedia = (req, res) => {
    * Link
    */
 
-  const obra = req.query.id;
+  const { id: obra } = req.query
   const query = `SELECT S.NOMBRE, T.LINK FROM TIENEN T INNER JOIN SOCIAL_MEDIA S ON T.ID_SOCIAL = S.ID_SOCIAL INNER JOIN OBRAS O ON T.ID_OBRA = O.ID_OBRA WHERE O.ID_OBRA = ${obra}`;
 
   // if there is no error, you have the result
@@ -67,7 +69,7 @@ exports.findAvgObra = (req, res) => {
    * Media de todos los puntajes de una Obra
    */
 
-  const obra = req.query.id;
+  const { id: obra } = req.query
   const query = `SELECT AVG(PUNTOS) FROM PUNTUAN WHERE ID_OBRA = ${obra}`;
 
   // if there is no error, you have the result
@@ -93,7 +95,8 @@ exports.findInfoCaps = (req, res) => {
    * Fecha en la que fue lanzado
    */
 
-  const obra = req.query.id;
+  const { id: obra } = req.query
+
   const query = `SELECT C.ID_CAPITULO, C.NOMBRE, C.NUMERO, C.FECHA
                  FROM CAPITULOS C
                  INNER JOIN OBRAS O ON C.ID_OBRA = O.ID_OBRA
@@ -148,8 +151,7 @@ exports.findFollow = (req, res) => {
    * Valor Booleano 0 False - 1 True
    */
 
-  const obra = req.query.id;
-  const user = req.query.user;
+  const { id: obra, user } = req.query
 
   const query = `SELECT 
                 CASE WHEN EXISTS 
@@ -171,3 +173,77 @@ exports.findFollow = (req, res) => {
 
   });
 }
+
+// Crea un usuario nuevo
+exports.createUser = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * Valor Booleano 0 False - 1 True
+   */
+
+  const { id: obra, user } = req.query
+
+  const query = `SELECT 
+                CASE WHEN EXISTS 
+                  (SELECT  *
+                  FROM SIGUEN as S  
+                  WHERE S.ID_OBRA = ${obra} AND S.ID_USUARIO = ${user})
+                THEN 1 
+                ELSE 0 
+                END AS Booleano`;
+
+  // if there is no error, you have the result
+  connection.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw err;
+
+    // if there is no error, you have the result
+    res.send(result);
+
+  });
+}
+
+
+
+//Genera TOKEN de session
+exports.generateToken = (req, res) => {
+
+  const { user, password } = req.query;
+
+  const query = `SELECT 
+                  (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano
+                  FROM
+                  USUARIOS
+                  WHERE
+                  EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'
+                  `;
+
+  // if there is no error, you have the result
+  connection.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw err;
+
+    // if there is no error, you have the result
+
+    if (result[0].booleano) {
+      // Issue token
+      const payload = { user };
+      const token = jwt.sign(payload, secret, {
+        expiresIn: '1h'
+      });
+      res.cookie('token', token, { httpOnly: true })
+        .sendStatus(200);
+    } else {
+      res.status(401)
+        .json({
+          error: 'Incorrect password'
+        });
+    }
+  });
+}
+
+
+
