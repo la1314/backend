@@ -179,16 +179,44 @@ exports.createUser = (req, res) => {
 
   //La query devolverá los siguientes datos:
   /**
+   * Devolvera Ok cuando el usuario sea creado
+   */
+
+  const { username, email, password } = req.query
+  const recover = Math.floor(Math.random() * (9999999999- 1111111111)) + 1111111111;
+
+  const query = `INSERT INTO USUARIOS (ID_USUARIO, EMAIL, USERNAME, PASSWORD, RECOVER)
+                 VALUES (NULL, "${email}", "${username}", "${password}", ${recover})
+                 `;
+
+  // if there is no error, you have the result
+  connection.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw err;
+
+    // if there is no error, you have the result
+    res.status(200).send('OK');
+
+  });
+}
+
+
+//Comprueba que el usuario ingresado existe
+exports.checkUser = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
    * Valor Booleano 0 False - 1 True
    */
 
-  const { id: obra, user } = req.query
+  const { user } = req.query
 
   const query = `SELECT 
                 CASE WHEN EXISTS 
-                  (SELECT  *
-                  FROM SIGUEN as S  
-                  WHERE S.ID_OBRA = ${obra} AND S.ID_USUARIO = ${user})
+                  (SELECT  U.ID_USUARIO
+                  FROM USUARIOS U  
+                  WHERE U.USERNAME LIKE '${user}' OR U.EMAIL LIKE '${user}')
                 THEN 1 
                 ELSE 0 
                 END AS Booleano`;
@@ -204,8 +232,6 @@ exports.createUser = (req, res) => {
 
   });
 }
-
-
 
 //Genera TOKEN de session
 exports.generateToken = (req, res) => {
@@ -232,7 +258,7 @@ exports.generateToken = (req, res) => {
       // Issue token
       const payload = { user };
       const token = jwt.sign(payload, secret, {
-        expiresIn: '1h'
+        expiresIn: '150h'
       });
       res.cookie('token', token, { httpOnly: true })
         .sendStatus(200);

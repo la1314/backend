@@ -25,7 +25,7 @@ app.get('/api/', (req, res) => {
     res.json({ "message": "API de mcnreader" });
 });
 
-// Require Puntuaciones routes
+// Require bd routes
 require('./app/routes/db.routes.js')(app);
 
 // Escuchemos en un puerto
