@@ -1,4 +1,4 @@
-const connection = require('../models/db.model.js');
+const pool = require('../models/db.model.js');
 const jwt = require('jsonwebtoken');
 const secret = process.env.TOKEN_SECRET;
 
@@ -25,10 +25,13 @@ exports.findObraInfo = (req, res) => {
                   WHERE O.ID_OBRA = ${obra}`;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
     //console.log(result);
@@ -50,10 +53,13 @@ exports.findSocialMedia = (req, res) => {
   const query = `SELECT S.NOMBRE, T.LINK FROM TIENEN T INNER JOIN SOCIAL_MEDIA S ON T.ID_SOCIAL = S.ID_SOCIAL INNER JOIN OBRAS O ON T.ID_OBRA = O.ID_OBRA WHERE O.ID_OBRA = ${obra}`;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
     res.send(result);
@@ -73,10 +79,13 @@ exports.findAvgObra = (req, res) => {
   const query = `SELECT AVG(PUNTOS) FROM PUNTUAN WHERE ID_OBRA = ${obra}`;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
     res.send(result);
@@ -103,10 +112,13 @@ exports.findInfoCaps = (req, res) => {
                  WHERE O.ID_OBRA = ${obra}`;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
     res.send(result);
@@ -132,10 +144,13 @@ exports.findLeidos = (req, res) => {
                 `;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
     res.send(result);
@@ -163,10 +178,13 @@ exports.findFollow = (req, res) => {
                 END AS Booleano`;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
     res.send(result);
@@ -190,10 +208,13 @@ exports.createUser = (req, res) => {
                  `;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
     res.status(200).send('OK');
@@ -222,10 +243,13 @@ exports.checkUser = (req, res) => {
                 END AS Booleano`;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    }
 
     // if there is no error, you have the result
     res.send(result);
@@ -250,10 +274,13 @@ exports.generateToken = (req, res) => {
                   `;
 
   // if there is no error, you have the result
-  connection.query(query, (err, result) => {
+  pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) {
+      pool.release();
+      throw err;
+    } 
 
     // if there is no error, you have the result
 

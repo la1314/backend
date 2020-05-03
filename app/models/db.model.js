@@ -1,14 +1,28 @@
 const mysql = require('mysql');
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
+  connectionLimit: 100,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
-  database: `gupoecom_mcnreader`
+  database: `gupoecom_mcnreader`,
+  charset: 'utf8mb4',
+  debug: false
 });
 
-connection.connect(function(err) {
-  if (err) throw err.code;
-});
+pool.getConnection((err, connection) => {
+  if (err) {
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+          console.error('Database connection was closed.')
+      }
+      if (err.code === 'ER_CON_COUNT_ERROR') {
+          console.error('Database has too many connections.')
+      }
+      if (err.code === 'ECONNREFUSED') {
+          console.error('Database connection was refused.')
+      }
+  }
+  if (connection) connection.release()
+  return
+})
 
-
-module.exports = connection;
+module.exports = pool;
