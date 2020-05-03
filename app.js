@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3069;
 const cookieParser = require('cookie-parser');
+require('dotenv').config({ encoding: 'latin1' })
 
 // Parse cookies passed by our browser
 app.use(cookieParser());
@@ -10,11 +11,7 @@ app.use(cookieParser());
 // Paginas publicas (estaticas)
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.urlencoded())
-// Utilizaremos body-parser para "parsear lo que nos pidan"
-/*app.use(bodyParser.urlencoded({
-    extended: true
-}));*/
+app.use(express.urlencoded({ extended: true }))
 
 //Parsearemos los jsones
 //app.use(bodyParser.json());

@@ -1,6 +1,6 @@
 const connection = require('../models/db.model.js');
 const jwt = require('jsonwebtoken');
-const secret = 'mysecretsshhh';
+const secret = process.env.TOKEN_SECRET;
 
 // Obtiene datos para la página de la obra
 exports.findObraInfo = (req, res) => {
@@ -183,7 +183,7 @@ exports.createUser = (req, res) => {
    */
 
   const { username, email, password } = req.query
-  const recover = Math.floor(Math.random() * (9999999999- 1111111111)) + 1111111111;
+  const recover = Math.floor(Math.random() * (9999999999 - 1111111111)) + 1111111111;
 
   const query = `INSERT INTO USUARIOS (ID_USUARIO, EMAIL, USERNAME, PASSWORD, RECOVER)
                  VALUES (NULL, "${email}", "${username}", "${password}", ${recover})
@@ -236,10 +236,13 @@ exports.checkUser = (req, res) => {
 //Genera TOKEN de session
 exports.generateToken = (req, res) => {
 
+  // ID del usuario guardado dentro del token como iduser
+
   const { user, password } = req.query;
 
   const query = `SELECT 
-                  (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano
+                  (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano,
+                  ID_USUARIO AS idUser
                   FROM
                   USUARIOS
                   WHERE
@@ -255,18 +258,16 @@ exports.generateToken = (req, res) => {
     // if there is no error, you have the result
 
     if (result[0].booleano) {
+
       // Issue token
-      const payload = { user };
+      const payload = {'user': user,'idUser': result[0].idUser };
       const token = jwt.sign(payload, secret, {
-        expiresIn: '150h'
+        expiresIn: '5h'
       });
       res.cookie('token', token, { httpOnly: true })
-        .sendStatus(200);
+        .status(200).send('1');
     } else {
-      res.status(401)
-        .json({
-          error: 'Incorrect password'
-        });
+      res.status(200).send('0');
     }
   });
 }

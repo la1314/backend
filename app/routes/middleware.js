@@ -1,6 +1,7 @@
 // middleware.js
+require('dotenv').config({ encoding: 'latin1' });
 const jwt = require('jsonwebtoken');
-const secret = 'mysecretsshhh';
+const secret = process.env.TOKEN_SECRET;
 
 const withAuth = function(req, res, next) {
 
@@ -8,15 +9,15 @@ const withAuth = function(req, res, next) {
 
   if (!token) {
 
-    res.send('Unauthorized: No token provided');
+    res.send('0');
 
   } else {
 
     jwt.verify(token, secret, function(err, decoded) {
       if (err) {
-        res.send('Unauthorized: Invalid token');
+        res.send('0');
       } else {
-        req.user = decoded.user;
+        req.user = decoded.idUser;
         next();
       }
     });

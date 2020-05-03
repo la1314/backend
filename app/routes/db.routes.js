@@ -44,13 +44,14 @@ module.exports = (app) => {
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
     app.get('/api/checkToken', withAuth, function (req, res) {
 
-        res.status(200).send('OK')
+        const user = req.user;
+        res.status(200).send((user).toString())
     });
 
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
     app.get('/api/clear', function (req, res) {
 
-        res.clearCookie('token').sendStatus(200);
+        res.clearCookie('token').send('1');
     });
 
     // Update a puntuaciones with puntuacionId
