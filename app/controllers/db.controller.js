@@ -31,7 +31,7 @@ exports.findObraInfo = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
     //console.log(result);
@@ -59,7 +59,7 @@ exports.findSocialMedia = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
     res.send(result);
@@ -85,7 +85,7 @@ exports.findAvgObra = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
     res.send(result);
@@ -118,7 +118,7 @@ exports.findInfoCaps = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
     res.send(result);
@@ -150,7 +150,7 @@ exports.findLeidos = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
     res.send(result);
@@ -184,7 +184,7 @@ exports.findFollow = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
     res.send(result);
@@ -214,7 +214,7 @@ exports.createUser = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
     res.status(200).send('OK');
@@ -240,7 +240,7 @@ exports.checkUser = (req, res) => {
                   WHERE U.USERNAME LIKE '${user}' OR U.EMAIL LIKE '${user}')
                 THEN 1 
                 ELSE 0 
-                END AS Booleano`;
+                END AS booleano`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -252,7 +252,7 @@ exports.checkUser = (req, res) => {
     }
 
     // if there is no error, you have the result
-    res.send(result);
+    res.send(result[0]);
 
   });
 }
@@ -280,22 +280,30 @@ exports.generateToken = (req, res) => {
     if (err) {
       pool.release();
       throw err;
-    } 
+    }
 
     // if there is no error, you have the result
 
-    if (result[0].booleano) {
+    if (result != '') {
 
-      // Issue token
-      const payload = {'user': user,'idUser': result[0].idUser };
-      const token = jwt.sign(payload, secret, {
-        expiresIn: '5h'
-      });
-      res.cookie('token', token, { httpOnly: true })
-        .status(200).send('1');
+      const incognita = result[0].booleano;
+      if (incognita) {
+
+        // Issue token
+        const payload = { 'user': user, 'idUser': result[0].idUser };
+        const token = jwt.sign(payload, secret, {
+          expiresIn: '5h'
+        });
+        res.cookie('token', token, { httpOnly: true })
+          .status(200).send('1');
+      } else {
+        res.status(200).send('0');
+      }
     } else {
       res.status(200).send('0');
     }
+
+
   });
 }
 
