@@ -45,11 +45,19 @@ module.exports = (app) => {
     app.get('/api/checkToken', withAuth, function (req, res) {
 
         const user = req.user;
-        res.status(200).send((user).toString())
+        const rol = req.rol;
+
+        const json = {
+            user: user,
+            rol : rol
+        }
+
+        //res.status(200).send((user).toString())
+        res.json(json)
     });
 
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
-    app.get('/api/clear', function (req, res) {
+    app.post('/api/clear', function (req, res) {
 
         res.clearCookie('token').send('1');
     });

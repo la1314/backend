@@ -1,5 +1,6 @@
 const pool = require('../models/db.model.js');
 const jwt = require('jsonwebtoken');
+const toolF =  require('./funciones.js');
 const secret = process.env.TOKEN_SECRET;
 
 // Obtiene datos para la página de la obra
@@ -200,12 +201,10 @@ exports.createUser = (req, res) => {
    * Devolvera Ok cuando el usuario sea creado
    */
 
-  const { username, email, password } = req.query
-  const recover = Math.floor(Math.random() * (9999999999 - 1111111111)) + 1111111111;
+  const { type, username, email, password, phone } = req.query
 
-  const query = `INSERT INTO USUARIOS (ID_USUARIO, EMAIL, USERNAME, PASSWORD, RECOVER)
-                 VALUES (NULL, "${email}", "${username}", "${password}", ${recover})
-                 `;
+
+  const query = toolF.devolverQueryCreateUser(type, username, email, password, phone);
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -230,14 +229,38 @@ exports.checkUser = (req, res) => {
   /**
    * Valor Booleano 0 False - 1 True
    */
+  const { user, type } = req.query
 
+  const query = toolF.devolverQueryCheckUser(type, user)
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) {
+      pool.release();
+      throw err;
+    }
+
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+}
+
+//Comprueba que el usuario ingresado existe
+exports.checkEditor = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * Valor Booleano 0 False - 1 True
+   */
   const { user } = req.query
 
   const query = `SELECT 
                 CASE WHEN EXISTS 
-                  (SELECT  U.ID_USUARIO
-                  FROM USUARIOS U  
-                  WHERE U.USERNAME LIKE '${user}' OR U.EMAIL LIKE '${user}')
+                  (SELECT  E.ID_EDITOR
+                  FROM EDITORES E  
+                  WHERE E.USERNAME LIKE '${user}' OR E.EMAIL LIKE '${user}')
                 THEN 1 
                 ELSE 0 
                 END AS booleano`;
@@ -253,25 +276,18 @@ exports.checkUser = (req, res) => {
 
     // if there is no error, you have the result
     res.send(result[0]);
-
   });
 }
+
 
 //Genera TOKEN de session
 exports.generateToken = (req, res) => {
 
   // ID del usuario guardado dentro del token como iduser
+  //TODO Implementar rol
+  const { user, password, type } = req.query;
 
-  const { user, password } = req.query;
-
-  const query = `SELECT 
-                  (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano,
-                  ID_USUARIO AS idUser
-                  FROM
-                  USUARIOS
-                  WHERE
-                  EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'
-                  `;
+  const query = toolF.devolverQueryGenerateToken(type, user, password)
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -290,11 +306,11 @@ exports.generateToken = (req, res) => {
       if (incognita) {
 
         // Issue token
-        const payload = { 'user': user, 'idUser': result[0].idUser };
+        const payload = { 'user': user, 'idUser': result[0].idUser, 'idRol': result[0].idRol };
         const token = jwt.sign(payload, secret, {
           expiresIn: '5h'
         });
-        res.cookie('token', token, { httpOnly: true })
+        res.cookie('token', token, { httpOnly: true, SameSite: 'None' })
           .status(200).send('1');
       } else {
         res.status(200).send('0');
@@ -302,8 +318,6 @@ exports.generateToken = (req, res) => {
     } else {
       res.status(200).send('0');
     }
-
-
   });
 }
 

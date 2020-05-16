@@ -18,6 +18,7 @@ const withAuth = function(req, res, next) {
         res.send('0');
       } else {
         req.user = decoded.idUser;
+        req.rol = decoded.idRol;
         next();
       }
     });
