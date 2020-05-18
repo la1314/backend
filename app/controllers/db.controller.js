@@ -3,6 +3,18 @@ const jwt = require('jsonwebtoken');
 const toolF =  require('./funciones.js');
 const secret = process.env.TOKEN_SECRET;
 
+//Añane una nueva Obra
+exports.newObra = (req, res) => {
+
+const {editor, name, autor, lanzamiento, cover, estado, tipo, visibilidad} = req.query
+
+const query = `INSERT INTO OBRAS 
+(ID_OBRA, ID_EDITOR, NOMBRE, DESCRIPCION, AUTOR, LANZAMIENTO, COVER, ID_ESTADO, ID_TIPO, VISIBILIDAD)
+VALUES (NULL, "${editor}", "${name}", "","${autor}", "${lanzamiento}", "${cover}", "${estado}", "${tipo}", "${visibilidad}")`
+
+res.send(req.query)
+}
+
 // Obtiene datos para la página de la obra
 exports.findObraInfo = (req, res) => {
 
@@ -38,8 +50,44 @@ exports.findObraInfo = (req, res) => {
     //console.log(result);
     res.send(result);
   });
-
 };
+
+//TODO Refactorizar para filtar por post
+
+//Devuelve los estados que puede tener una obra
+exports.findEstados = (req, res) => {
+
+  const query = `SELECT ID_ESTADO, NOMBRE FROM ESTADOS`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+     // if any error while executing above query, throw error
+     if (err) {
+      pool.release();
+      throw err;
+    }
+    res.send(result);
+  });
+}
+
+//Devuelve los tipos de obras que pueden haber
+exports.findTipos = (req, res) => {
+
+  const query = `SELECT ID_TIPO, NOMBRE FROM TIPO`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+     // if any error while executing above query, throw error
+     if (err) {
+      pool.release();
+      throw err;
+    }
+    res.send(result);
+  });
+}
+
 
 // Obtiene los datos de las redes sociales de la Obra
 exports.findSocialMedia = (req, res) => {

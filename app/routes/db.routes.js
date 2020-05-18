@@ -5,9 +5,18 @@ module.exports = (app) => {
     //Da nombre al exportado con el cual se irán llamando las funciones de llamada
     const db = require('../controllers/db.controller.js');
 
+    // Añade una obra nueva
+    app.post('/api/new-obra/', db.newObra);
+
     // Obtiene datos para la página de la obra
     // ID
     app.post('/api/find-info-obra/', db.findObraInfo);
+
+    // Obtiene los estados
+    app.post('/api/find-estados/', db.findEstados);
+
+    // Obtiene los tipos
+    app.post('/api/find-tipos/', db.findTipos);
 
     // Obtiene los nombres y links de las redes sociales de una obra
     // ID

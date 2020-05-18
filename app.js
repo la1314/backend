@@ -3,15 +3,21 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3069;
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 require('dotenv').config({ encoding: 'latin1' })
+
+app.use(fileUpload());
 
 // Parse cookies passed by our browser
 app.use(cookieParser());
+
 
 // Paginas publicas (estaticas)
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.urlencoded({ extended: true }))
+
+
 
 //Parsearemos los jsones
 //app.use(bodyParser.json());
