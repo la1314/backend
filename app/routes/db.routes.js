@@ -5,6 +5,12 @@ module.exports = (app) => {
     //Da nombre al exportado con el cual se irán llamando las funciones de llamada
     const db = require('../controllers/db.controller.js');
 
+    // Obtiene la ID de un editor
+    app.post('/api/editor-id/', db.editorID);
+
+    // Obtiene la ID de una Obra
+    app.post('/api/obra-id/', db.obraID);
+
     // Añade una obra nueva
     app.post('/api/new-obra/', db.newObra);
 

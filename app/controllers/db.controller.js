@@ -1,18 +1,70 @@
 const pool = require('../models/db.model.js');
 const jwt = require('jsonwebtoken');
-const toolF =  require('./funciones.js');
+const toolF = require('./funciones.js');
 const secret = process.env.TOKEN_SECRET;
+
+//Obtiene la ID del editor requerido
+exports.editorID = (req, res) => {
+
+  const { editor } = req.query
+  const query = `SELECT ID_EDITOR FROM EDITORES E WHERE E.USERNAME LIKE "${editor}" OR E.EMAIL LIKE "${editor}"`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) {
+      pool.release();
+      throw err;
+    }
+
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+}
+
+//Obtiene la ID de una obra requerido
+exports.obraID = (req, res) => {
+
+  const { editor, name, tipo, autor } = req.query
+  const query = `SELECT ID_OBRA FROM OBRAS O 
+  WHERE O.ID_EDITOR = ${editor} AND O.NOMBRE LIKE "${name}" AND O.ID_TIPO = ${tipo} AND O.AUTOR LIKE "${autor}"`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) {
+      pool.release();
+      throw err;
+    }
+
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+}
 
 //Añane una nueva Obra
 exports.newObra = (req, res) => {
 
-const {editor, name, autor, lanzamiento, cover, estado, tipo, visibilidad} = req.query
+  const { editor, name, autor, lanzamiento, estado, tipo, visibilidad } = req.query
 
-const query = `INSERT INTO OBRAS 
+  const query = `INSERT INTO OBRAS 
 (ID_OBRA, ID_EDITOR, NOMBRE, DESCRIPCION, AUTOR, LANZAMIENTO, COVER, ID_ESTADO, ID_TIPO, VISIBILIDAD)
-VALUES (NULL, "${editor}", "${name}", "","${autor}", "${lanzamiento}", "${cover}", "${estado}", "${tipo}", "${visibilidad}")`
+VALUES (NULL, "${editor}", "${name}", "","${autor}", "${lanzamiento}", "", "${estado}", "${tipo}", "${visibilidad}")`
 
-res.send(req.query)
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) {
+      pool.release();
+      throw err;
+    }
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
 }
 
 // Obtiene datos para la página de la obra
@@ -52,6 +104,34 @@ exports.findObraInfo = (req, res) => {
   });
 };
 
+// Crea un usuario nuevo
+exports.createUser = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * Devolvera Ok cuando el usuario sea creado
+   */
+
+  const { type, username, email, password, phone } = req.query
+
+
+  const query = toolF.devolverQueryCreateUser(type, username, email, password, phone);
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) {
+      pool.release();
+      throw err;
+    }
+
+    // if there is no error, you have the result
+      res.send(result)
+
+  });
+}
+
 //TODO Refactorizar para filtar por post
 
 //Devuelve los estados que puede tener una obra
@@ -62,8 +142,8 @@ exports.findEstados = (req, res) => {
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
 
-     // if any error while executing above query, throw error
-     if (err) {
+    // if any error while executing above query, throw error
+    if (err) {
       pool.release();
       throw err;
     }
@@ -79,8 +159,8 @@ exports.findTipos = (req, res) => {
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
 
-     // if any error while executing above query, throw error
-     if (err) {
+    // if any error while executing above query, throw error
+    if (err) {
       pool.release();
       throw err;
     }
@@ -237,34 +317,6 @@ exports.findFollow = (req, res) => {
 
     // if there is no error, you have the result
     res.send(result);
-
-  });
-}
-
-// Crea un usuario nuevo
-exports.createUser = (req, res) => {
-
-  //La query devolverá los siguientes datos:
-  /**
-   * Devolvera Ok cuando el usuario sea creado
-   */
-
-  const { type, username, email, password, phone } = req.query
-
-
-  const query = toolF.devolverQueryCreateUser(type, username, email, password, phone);
-
-  // if there is no error, you have the result
-  pool.query(query, (err, result) => {
-
-    // if any error while executing above query, throw error
-    if (err) {
-      pool.release();
-      throw err;
-    }
-
-    // if there is no error, you have the result
-    res.status(200).send('OK');
 
   });
 }
