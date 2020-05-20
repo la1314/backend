@@ -4,20 +4,35 @@ module.exports = (app) => {
 
     //Da nombre al exportado con el cual se irán llamando las funciones de llamada
     const db = require('../controllers/db.controller.js');
-    const dbObra = require('../controllers/db.controllerObra.js');
+    const dbO = require('../controllers/db.controllerObra.js');
+    const dbC = require('../controllers/db.controllerChapter.js');
 
-    // Obtiene la ID de un editor
+    /** Lectores y Editores **/
+    // Obtiene la ID de un editor -> editor (String)
     app.post('/api/editor-id/', db.editorID);
 
-    // Obtiene la ID de una Obra
-    app.post('/api/obra-id/', dbObra.obraID);
+    //Comprueba que el usuario ingresado existe -> type, username, email, password, phone
+    app.post('/api/create-user/', db.createUser);
 
-    // Añade una obra nueva
-    app.post('/api/new-obra/', dbObra.newObra);
+    //Comprueba que el usuario ingresado existe -> user, type
+    app.post('/api/check-user/', db.checkUser);
 
-    // Obtiene datos para la página de la obra
-    // ID
-    app.post('/api/find-info-obra/', dbObra.findObraInfo);
+
+    /** Obras **/
+    // Añade una obra nueva -> editor, name, autor, lanzamiento, estado, tipo, visibilidad
+    app.post('/api/new-obra/', dbO.newObra);
+
+    // Obtiene la ID de una Obra ->  editor, name, tipo, autor
+    app.post('/api/obra-id/', dbO.obraID);
+
+    // Obtiene datos para la página de la obra -> id
+    app.post('/api/find-info-obra/', dbO.findObraInfo);
+
+    // Obtiene los nombres y links de las redes sociales de una obra -> id
+    app.post('/api/find-social-media/', db.findSocialMedia);
+
+    // Obtiene la media de una obra -> id
+    app.post('/api/find-avg-obra/', dbO.findAvgObra);
 
     // Obtiene los estados
     app.post('/api/find-estados/', db.findEstados);
@@ -25,36 +40,21 @@ module.exports = (app) => {
     // Obtiene los tipos
     app.post('/api/find-tipos/', db.findTipos);
 
-    // Obtiene los nombres y links de las redes sociales de una obra
-    // ID
-    app.post('/api/find-social-media/', db.findSocialMedia);
+    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> id(id obra), user(User id)
+    app.post('/api/find-follow/', db.findFollow);
 
-    // Obtiene los nombres y links de las redes sociales de una obra
-    // ID
-    app.post('/api/find-avg-obra/', dbObra.findAvgObra);
 
-    // Obtiene la infomación de los capítulos de una obra
-    // ID & USER
-    app.post('/api/find-info-caps/', db.findInfoCaps);
+    /** Capítulos y paginas **/
+    // Obtiene la infomación de los capítulos de una obra -> id
+    app.post('/api/find-info-caps/', dbC.findInfoCaps);
 
     // Obtiene los capítulos que ha leido un usuario en una determinada Obra
     //ID & USER
-    app.post('/api/find-leidos/', db.findLeidos);
+    app.post('/api/find-leidos/', dbC.findLeidos);
 
-    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano')
-    // ID & USER
-    app.post('/api/find-follow/', db.findFollow);
 
-    //Comprueba que el usuario ingresado existe
-    // USER
-    app.post('/api/create-user/', db.createUser);
-
-    //Comprueba que el usuario ingresado existe
-    // USER
-    app.post('/api/check-user/', db.checkUser);
-
-    //Genera un Token de session cuando los datos de login son correctos
-    // USER & PASSWORD
+    /** Token **/
+    //Genera un Token de session cuando los datos de login son correctos -> user, password, type
     app.post('/api/generate-token/', db.generateToken);
 
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
@@ -65,7 +65,7 @@ module.exports = (app) => {
 
         const json = {
             user: user,
-            rol : rol
+            rol: rol
         }
 
         //res.status(200).send((user).toString())

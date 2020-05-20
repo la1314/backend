@@ -12,7 +12,7 @@ exports.obraID = (req, res) => {
 
         // if any error while executing above query, throw error
         if (err) {
-            pool.release();
+            poolObra.release();
             throw err;
         }
 
@@ -35,7 +35,7 @@ exports.newObra = (req, res) => {
 
         // if any error while executing above query, throw error
         if (err) {
-            pool.release();
+            poolObra.release();
             throw err;
         }
 
@@ -71,7 +71,7 @@ exports.findObraInfo = (req, res) => {
 
         // if any error while executing above query, throw error
         if (err) {
-            pool.release();
+            poolObra.release();
             throw err;
         }
 
@@ -97,7 +97,7 @@ exports.findAvgObra = (req, res) => {
 
         // if any error while executing above query, throw error
         if (err) {
-            pool.release();
+            poolObra.release();
             throw err;
         }
 
