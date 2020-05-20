@@ -4,19 +4,20 @@ module.exports = (app) => {
 
     //Da nombre al exportado con el cual se irán llamando las funciones de llamada
     const db = require('../controllers/db.controller.js');
+    const dbObra = require('../controllers/db.controllerObra.js');
 
     // Obtiene la ID de un editor
     app.post('/api/editor-id/', db.editorID);
 
     // Obtiene la ID de una Obra
-    app.post('/api/obra-id/', db.obraID);
+    app.post('/api/obra-id/', dbObra.obraID);
 
     // Añade una obra nueva
-    app.post('/api/new-obra/', db.newObra);
+    app.post('/api/new-obra/', dbObra.newObra);
 
     // Obtiene datos para la página de la obra
     // ID
-    app.post('/api/find-info-obra/', db.findObraInfo);
+    app.post('/api/find-info-obra/', dbObra.findObraInfo);
 
     // Obtiene los estados
     app.post('/api/find-estados/', db.findEstados);
@@ -30,7 +31,7 @@ module.exports = (app) => {
 
     // Obtiene los nombres y links de las redes sociales de una obra
     // ID
-    app.post('/api/find-avg-obra/', db.findAvgObra);
+    app.post('/api/find-avg-obra/', dbObra.findAvgObra);
 
     // Obtiene la infomación de los capítulos de una obra
     // ID & USER
@@ -76,10 +77,4 @@ module.exports = (app) => {
 
         res.clearCookie('token').send('1');
     });
-
-    // Update a puntuaciones with puntuacionId
-    //app.put('/api/puntuaciones/actualizar', puntuaciones.update);
-
-    // Delete a puntuaciones with puntuacionId
-    //app.delete('/api/puntuaciones/:puntuacionId', puntuaciones.delete);
 }
