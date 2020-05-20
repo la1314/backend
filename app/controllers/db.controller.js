@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const toolF = require('./funciones.js');
 const secret = process.env.TOKEN_SECRET;
 
+
+//TODO Dividir controlador 
 //Obtiene la ID del editor requerido
 exports.editorID = (req, res) => {
 
