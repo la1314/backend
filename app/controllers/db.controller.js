@@ -14,10 +14,7 @@ exports.editorID = (req, res) => {
   pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) {
-      pool.release();
-      throw err;
-    }
+    if (err) throw new Error(err)
 
     // if there is no error, you have the result
     res.send(result[0]);
@@ -40,10 +37,7 @@ exports.createUser = (req, res) => {
   pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) {
-      pool.release();
-      throw err;
-    }
+    if (err) throw new Error(err)
 
     // if there is no error, you have the result
     res.send(result)
@@ -60,10 +54,9 @@ exports.findTipos = (req, res) => {
   pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) {
-      pool.release();
-      throw err;
-    }
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
     res.send(result);
   });
 }
@@ -78,12 +71,11 @@ exports.findEstados = (req, res) => {
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
 
-      // if any error while executing above query, throw error
-      if (err) {
-          pool.release();
-          throw err;
-      }
-      res.send(result);
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
   });
 }
 
@@ -102,14 +94,11 @@ exports.findSocialMedia = (req, res) => {
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
 
-      // if any error while executing above query, throw error
-      if (err) {
-          pool.release();
-          throw err;
-      }
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
 
-      // if there is no error, you have the result
-      res.send(result);
+    // if there is no error, you have the result
+    res.send(result);
   });
 };
 
@@ -136,10 +125,7 @@ exports.findFollow = (req, res) => {
   pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) {
-      pool.release();
-      throw err;
-    }
+    if (err) throw new Error(err)
 
     // if there is no error, you have the result
     res.send(result);
@@ -163,10 +149,7 @@ exports.checkUser = (req, res) => {
   pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) {
-      pool.release();
-      throw err;
-    }
+    if (err) throw new Error(err)
 
     // if there is no error, you have the result
     res.send(result[0]);
@@ -186,10 +169,7 @@ exports.generateToken = (req, res) => {
   pool.query(query, (err, result) => {
 
     // if any error while executing above query, throw error
-    if (err) {
-      pool.release();
-      throw err;
-    }
+    if (err) throw new Error(err)
 
     // if there is no error, you have the result
 

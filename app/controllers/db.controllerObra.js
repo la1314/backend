@@ -11,10 +11,7 @@ exports.obraID = (req, res) => {
     poolObra.query(query, (err, result) => {
 
         // if any error while executing above query, throw error
-        if (err) {
-            poolObra.release();
-            throw err;
-        }
+        if (err) throw new Error(err)
 
         // if there is no error, you have the result
         res.send(result[0]);
@@ -34,10 +31,7 @@ exports.newObra = (req, res) => {
     poolObra.query(query, (err, result) => {
 
         // if any error while executing above query, throw error
-        if (err) {
-            poolObra.release();
-            throw err;
-        }
+        if (err) throw new Error(err)
 
         // if there is no error, you have the result
         res.send(result);
@@ -70,10 +64,7 @@ exports.findObraInfo = (req, res) => {
     poolObra.query(query, (err, result) => {
 
         // if any error while executing above query, throw error
-        if (err) {
-            poolObra.release();
-            throw err;
-        }
+        if (err) throw new Error(err)
 
         // if there is no error, you have the result
         //console.log(result);
@@ -96,10 +87,7 @@ exports.findAvgObra = (req, res) => {
     poolObra.query(query, (err, result) => {
 
         // if any error while executing above query, throw error
-        if (err) {
-            poolObra.release();
-            throw err;
-        }
+        if (err) throw new Error(err)
 
         // if there is no error, you have the result
         res.send(result);
@@ -121,12 +109,33 @@ exports.findAllEditorObras = (req, res) => {
     poolObra.query(query, (err, result) => {
 
         // if any error while executing above query, throw error
-        if (err) {
-            poolObra.release();
-            throw err;
-        }
+        if (err) throw new Error(err)
 
         // if there is no error, you have the result
         res.send(result);
     });
 };
+
+// Obtiene el ID y el Nombre de cada una de las obras de un editor
+exports.editObraName = (req, res) => {
+
+    //La query devolverá los siguientes datos:
+    /**
+     * ID y el Nombre de cada una de las obras de un editor
+     */
+
+    const { obra, name } = req.query
+    const query = `UPDATE OBRAS SET NOMBRE = '${name}' WHERE ID_OBRA = ${obra}`;
+
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+
+        // if any error while executing above query, throw error
+        if (err) throw new Error(err)
+
+
+        // if there is no error, you have the result
+        res.send(result);
+    });
+};
+

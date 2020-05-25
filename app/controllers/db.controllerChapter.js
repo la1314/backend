@@ -22,10 +22,7 @@ exports.findInfoCaps = (req, res) => {
     poolChapter.query(query, (err, result) => {
   
       // if any error while executing above query, throw error
-      if (err) {
-        poolChapter.release();
-        throw err;
-      }
+      if (err) throw new Error(err)
   
       // if there is no error, you have the result
       res.send(result);
@@ -54,10 +51,7 @@ exports.findLeidos = (req, res) => {
     poolChapter.query(query, (err, result) => {
   
       // if any error while executing above query, throw error
-      if (err) {
-        poolChapter.release();
-        throw err;
-      }
+      if (err) throw new Error(err)
   
       // if there is no error, you have the result
       res.send(result);
