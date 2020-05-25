@@ -46,6 +46,10 @@ module.exports = (app) => {
     // Obtiene datos de todas las obras de un editor -> editor (id editor)
     app.post('/api/find-all-editor-obras/', dbO.findAllEditorObras);
 
+    // Edita los parámetros de una obra -> type (int), obra (id obra), value (Valor nuevo)
+    // Type: 1:NOMBRE, 2:AUTOR, 3:LANZAMIENTO, 4: DESCRIPTION, 5:COVER
+    app.post('/api/edit-obra/', dbO.editObra);
+
 
     /** Capítulos y paginas **/
     // Obtiene la infomación de los capítulos de una obra -> id

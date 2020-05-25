@@ -24,7 +24,7 @@ exports.devolverQueryCheckUser = (type, user) => {
     let query = '';
 
     if (parseInt(type)) {
-        
+
         query = `SELECT 
         CASE WHEN EXISTS 
           (SELECT  E.ID_EDITOR
@@ -34,7 +34,7 @@ exports.devolverQueryCheckUser = (type, user) => {
         ELSE 0 
         END AS booleano`;
     } else {
-        
+
         query = `SELECT 
         CASE WHEN EXISTS 
           (SELECT  U.ID_USUARIO
@@ -43,6 +43,39 @@ exports.devolverQueryCheckUser = (type, user) => {
         THEN 1 
         ELSE 0 
         END AS booleano`;
+    }
+
+    return query;
+}
+
+//Devuelve una query dependiento al valor de la variable Type
+exports.devolverQueryEditObra = (type, obra, value) => {
+
+    let query = '';
+
+    switch (parseInt(type)) {
+        case 1:
+            query = `UPDATE OBRAS SET NOMBRE = '${value}' WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 2:
+            query = `UPDATE OBRAS SET AUTOR = '${value}' WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 3:
+            query = `UPDATE OBRAS SET LANZAMIENTO = ${value} WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 4:
+            query = `UPDATE OBRAS SET DESCRIPCION = '${value}' WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 5:
+            query = `UPDATE OBRAS SET COVER = '${value}' WHERE ID_OBRA = ${obra}`;
+            break;
+
+        default:
+            break;
     }
 
     return query;

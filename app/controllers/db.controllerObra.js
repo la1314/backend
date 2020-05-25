@@ -1,4 +1,5 @@
 const poolObra = require('../models/db.model.js');
+const toolQueryObra = require('./funciones.js');
 
 //Obtiene la ID de una obra requerido
 exports.obraID = (req, res) => {
@@ -116,16 +117,17 @@ exports.findAllEditorObras = (req, res) => {
     });
 };
 
-// Obtiene el ID y el Nombre de cada una de las obras de un editor
-exports.editObraName = (req, res) => {
+
+// Edita columnas de una obra dependiendo al valor de type
+exports.editObra = (req, res) => {
 
     //La query devolverá los siguientes datos:
     /**
-     * ID y el Nombre de cada una de las obras de un editor
+     * Actualizara los un parámetro de una obra
      */
 
-    const { obra, name } = req.query
-    const query = `UPDATE OBRAS SET NOMBRE = '${name}' WHERE ID_OBRA = ${obra}`;
+    const { type, obra, value } = req.query
+    const query = toolQueryObra.devolverQueryEditObra(type, obra, value);
 
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
