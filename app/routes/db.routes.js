@@ -25,7 +25,7 @@ module.exports = (app) => {
     // Obtiene la ID de una Obra ->  editor, name, tipo, autor
     app.post('/api/obra-id/', dbO.obraID);
 
-    // Obtiene datos para la página de la obra -> id
+    // Obtiene datos para la página de la obra -> obra (id obra)
     app.post('/api/find-info-obra/', dbO.findObraInfo);
 
     // Obtiene los nombres y links de las redes sociales de una obra -> id
@@ -40,8 +40,11 @@ module.exports = (app) => {
     // Obtiene los tipos
     app.post('/api/find-tipos/', db.findTipos);
 
-    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> id(id obra), user(User id)
+    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> id(id obra), user(id user)
     app.post('/api/find-follow/', db.findFollow);
+
+    // Obtiene datos de todas las obras de un editor -> editor (id editor)
+    app.post('/api/find-all-editor-obras/', dbO.findAllEditorObras);
 
 
     /** Capítulos y paginas **/

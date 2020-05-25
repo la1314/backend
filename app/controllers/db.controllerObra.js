@@ -28,7 +28,7 @@ exports.newObra = (req, res) => {
 
     const query = `INSERT INTO OBRAS 
   (ID_OBRA, ID_EDITOR, NOMBRE, DESCRIPCION, AUTOR, LANZAMIENTO, COVER, ID_ESTADO, ID_TIPO, VISIBILIDAD)
-  VALUES (NULL, "${editor}", "${name}", "","${autor}", "${lanzamiento}", "", "${estado}", "${tipo}", "${visibilidad}")`
+  VALUES (NULL, "${editor}", "${name}", "","${autor}", "${lanzamiento}", "https://tuinki.gupoe.com/media/default-cover.jpg", "${estado}", "${tipo}", "${visibilidad}")`
 
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -57,9 +57,9 @@ exports.findObraInfo = (req, res) => {
      * Cover
      * Lanzamiento
      */
-    const { id: obra } = req.query
+    const { obra } = req.query
     const query = `SELECT
-                    O.NOMBRE, AUTOR, DESCRIPCION, D.NOMBRE AS DEMOGRAFIA, COVER, LANZAMIENTO, AVG(PUNTOS)
+                    O.NOMBRE, AUTOR, DESCRIPCION, D.NOMBRE AS DEMOGRAFIA, COVER, LANZAMIENTO, AVG(PUNTOS) as MEDIA
                     FROM OBRAS O 
                     INNER JOIN SEGMENTADOS S ON O.ID_OBRA = S.ID_OBRA
                     INNER JOIN DEMOGRAFIAS D ON S.ID_DEMOGRAFIA = D.ID_DEMOGRAFIA
@@ -91,6 +91,31 @@ exports.findAvgObra = (req, res) => {
 
     const { id: obra } = req.query
     const query = `SELECT AVG(PUNTOS) FROM PUNTUAN WHERE ID_OBRA = ${obra}`;
+
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+
+        // if any error while executing above query, throw error
+        if (err) {
+            poolObra.release();
+            throw err;
+        }
+
+        // if there is no error, you have the result
+        res.send(result);
+    });
+};
+
+// Obtiene el ID y el Nombre de cada una de las obras de un editor
+exports.findAllEditorObras = (req, res) => {
+
+    //La query devolverá los siguientes datos:
+    /**
+     * ID y el Nombre de cada una de las obras de un editor
+     */
+
+    const { editor } = req.query
+    const query = `SELECT ID_OBRA, NOMBRE, COVER FROM OBRAS O WHERE O.ID_EDITOR = ${editor} ORDER BY NOMBRE`;
 
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
