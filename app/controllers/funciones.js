@@ -1,4 +1,4 @@
-//
+//Devuelve una query dependiento al valor de la variable Type
 exports.devolverQueryCreateUser = (type, username, email, password, phone) => {
 
     let query = '';
@@ -18,7 +18,7 @@ exports.devolverQueryCreateUser = (type, username, email, password, phone) => {
     return query;
 }
 
-//
+//Devuelve una query dependiento al valor de la variable Type
 exports.devolverQueryCheckUser = (type, user) => {
 
     let query = '';
@@ -81,7 +81,26 @@ exports.devolverQueryEditObra = (type, obra, value) => {
     return query;
 }
 
-//
+
+//Devuelve una query dependiento al valor de la variable Type
+exports.devolverQueryEditDemografia = (type, obra, demo) => {
+
+    let query = '';
+
+    if (parseInt(type)) {
+
+        query = `INSERT INTO SEGMENTADOS (ID_OBRA, ID_DEMOGRAFIA)
+        VALUES (${obra}, ${demo})
+        `;
+    } else {
+
+        query = `DELETE FROM SEGMENTADOS WHERE ID_OBRA = ${obra}`;
+    }
+
+    return query;
+}
+
+//Devuelve una query dependiento al valor de la variable Type
 exports.devolverQueryGenerateToken = (type, user, password) => {
 
     let query = '';

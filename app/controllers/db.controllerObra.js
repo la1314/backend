@@ -40,7 +40,7 @@ exports.newObra = (req, res) => {
 }
 
 // Obtiene datos para la página de la obra
-exports.findObraInfo = (req, res) => {
+exports.findInfoObra = (req, res) => {
 
     //La query devolverá los siguientes datos:
     /**
@@ -53,13 +53,8 @@ exports.findObraInfo = (req, res) => {
      * Lanzamiento
      */
     const { obra } = req.query
-    const query = `SELECT
-                    O.NOMBRE, AUTOR, DESCRIPCION, D.NOMBRE AS DEMOGRAFIA, COVER, LANZAMIENTO, AVG(PUNTOS) as MEDIA
-                    FROM OBRAS O 
-                    INNER JOIN SEGMENTADOS S ON O.ID_OBRA = S.ID_OBRA
-                    INNER JOIN DEMOGRAFIAS D ON S.ID_DEMOGRAFIA = D.ID_DEMOGRAFIA
-                    INNER JOIN PUNTUAN P ON O.ID_OBRA = P.ID_OBRA
-                    WHERE O.ID_OBRA = ${obra}`;
+    const query = `SELECT NOMBRE, AUTOR, DESCRIPCION, COVER, LANZAMIENTO FROM OBRAS
+    WHERE ID_OBRA = ${obra}`;
 
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -141,3 +136,79 @@ exports.editObra = (req, res) => {
     });
 };
 
+// Devuelve las Demografias
+exports.findAllDemografias = (req, res) => {
+
+    //La query devolverá los siguientes datos:
+    /**
+     * ID y el Nombre de cada una de las demografias
+     */
+
+    const query = `SELECT ID_DEMOGRAFIA AS ID, NOMBRE FROM DEMOGRAFIAS`;
+
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+
+        // if any error while executing above query, throw error
+        if (err) throw new Error(err)
+
+        // if there is no error, you have the result
+        res.send(result);
+    });
+};
+
+
+// Edita la demografia de una obra dependiendo al valor de type
+exports.editDemografia = (req, res) => {
+
+    //La query devolverá los siguientes datos:
+    /**
+     * Edita la demografia de una obra
+     */
+
+    const { type, obra, demo } = req.query
+
+    const query = toolQueryObra.devolverQueryEditDemografia(type, obra, demo);
+
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+
+        // if any error while executing above query, throw error
+        if (err) throw new Error(err)
+
+        // if there is no error, you have the result
+        res.send(result);
+    });
+};
+
+
+// Edita la demografia de una obra dependiendo al valor de type
+exports.getDemografia = (req, res) => {
+
+    //La query devolverá los siguientes datos:
+    /**
+     * Edita la demografia de una obra
+     */
+
+    const { obra } = req.query
+
+    const query = `SELECT D.NOMBRE AS NOMBRE FROM SEGMENTADOS S INNER JOIN DEMOGRAFIAS D ON `;
+
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+
+        // if any error while executing above query, throw error
+        if (err) throw new Error(err)
+
+        // if there is no error, you have the result
+        res.send(result);
+    });
+};
+
+/**
+ *
+SELECT * FROM `SEGMENTADOS`
+INNER JOIN DEMOGRAFIAS ON SEGMENTADOS.ID_DEMOGRAFIA = DEMOGRAFIAS.ID_DEMOGRAFIA
+INNER JOIN OBRAS ON OBRAS.ID_OBRA = SEGMENTADOS.ID_OBRA
+WHERE SEGMENTADOS.ID_OBRA = 6
+ */

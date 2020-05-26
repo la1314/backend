@@ -26,7 +26,7 @@ module.exports = (app) => {
     app.post('/api/obra-id/', dbO.obraID);
 
     // Obtiene datos para la página de la obra -> obra (id obra)
-    app.post('/api/find-info-obra/', dbO.findObraInfo);
+    app.post('/api/find-info-obra/', dbO.findInfoObra);
 
     // Obtiene los nombres y links de las redes sociales de una obra -> id
     app.post('/api/find-social-media/', db.findSocialMedia);
@@ -46,10 +46,21 @@ module.exports = (app) => {
     // Obtiene datos de todas las obras de un editor -> editor (id editor)
     app.post('/api/find-all-editor-obras/', dbO.findAllEditorObras);
 
+    // Devuelve las Demografias
+    app.post('/api/find-all-demografias/', dbO.findAllDemografias);
+
+     // Edita la demografia de una obra
+     app.post('/api/edit-demografia/', dbO.editDemografia);
+
+     // Obtiene la demografia de una obra
+     app.post('/api/get-demografia/', dbO.getDemografia);
+
     // Edita los parámetros de una obra -> type (int), obra (id obra), value (Valor nuevo)
     // Type: 1:NOMBRE, 2:AUTOR, 3:LANZAMIENTO, 4: DESCRIPTION, 5:COVER
     app.post('/api/edit-obra/', dbO.editObra);
 
+    
+    
 
     /** Capítulos y paginas **/
     // Obtiene la infomación de los capítulos de una obra -> id
