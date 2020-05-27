@@ -112,7 +112,6 @@ exports.findAllEditorObras = (req, res) => {
     });
 };
 
-
 // Edita columnas de una obra dependiendo al valor de type
 exports.editObra = (req, res) => {
 
@@ -130,6 +129,31 @@ exports.editObra = (req, res) => {
         // if any error while executing above query, throw error
         if (err) throw new Error(err)
 
+
+        // if there is no error, you have the result
+        res.send(result);
+    });
+};
+
+
+//Añade la demografia por defecto
+exports.defaultDemografia = (req, res) => {
+
+    //La query devolverá los siguientes datos:
+    /**
+     * Edita la demografia de una obra
+     */
+
+    const {obra} = req.query
+
+    const query = `INSERT INTO SEGMENTADOS (ID_OBRA, ID_DEMOGRAFIA)
+    VALUES (${obra}, 16)`;
+
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+
+        // if any error while executing above query, throw error
+        if (err) throw new Error(err)
 
         // if there is no error, you have the result
         res.send(result);
@@ -157,7 +181,6 @@ exports.findAllDemografias = (req, res) => {
     });
 };
 
-
 // Edita la demografia de una obra dependiendo al valor de type
 exports.editDemografia = (req, res) => {
 
@@ -166,9 +189,9 @@ exports.editDemografia = (req, res) => {
      * Edita la demografia de una obra
      */
 
-    const { type, obra, demo } = req.query
+    const {obra, demo } = req.query
 
-    const query = toolQueryObra.devolverQueryEditDemografia(type, obra, demo);
+    const query = `UPDATE SEGMENTADOS SET ID_DEMOGRAFIA = ${demo} WHERE ID_OBRA = ${obra}`;
 
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -181,8 +204,7 @@ exports.editDemografia = (req, res) => {
     });
 };
 
-
-// Edita la demografia de una obra dependiendo al valor de type
+// Obtiene la demografia de una obra
 exports.getDemografia = (req, res) => {
 
     //La query devolverá los siguientes datos:
@@ -192,7 +214,10 @@ exports.getDemografia = (req, res) => {
 
     const { obra } = req.query
 
-    const query = `SELECT D.NOMBRE AS NOMBRE FROM SEGMENTADOS S INNER JOIN DEMOGRAFIAS D ON `;
+    const query = `SELECT D.NOMBRE AS NOMBRE FROM SEGMENTADOS S
+     INNER JOIN DEMOGRAFIAS D ON D.ID_DEMOGRAFIA = S.ID_DEMOGRAFIA
+     WHERE S.ID_OBRA = ${obra}
+     `;
 
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -205,10 +230,89 @@ exports.getDemografia = (req, res) => {
     });
 };
 
-/**
- *
-SELECT * FROM `SEGMENTADOS`
-INNER JOIN DEMOGRAFIAS ON SEGMENTADOS.ID_DEMOGRAFIA = DEMOGRAFIAS.ID_DEMOGRAFIA
-INNER JOIN OBRAS ON OBRAS.ID_OBRA = SEGMENTADOS.ID_OBRA
-WHERE SEGMENTADOS.ID_OBRA = 6
- */
+//Devuelve los tipos de obras que pueden haber
+exports.findTipos = (req, res) => {
+
+    const query = `SELECT ID_TIPO, NOMBRE FROM TIPO`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  }
+  
+  //Devuelve los estados que puede tener una obra
+  exports.findEstados = (req, res) => {
+  
+    const query = `SELECT ID_ESTADO AS ID, NOMBRE FROM ESTADOS`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  }
+  
+  //Devuelve los generos que puede tener una obra
+  exports.findGeneros = (req, res) => {
+  
+    const query = `SELECT ID_GENERO AS ID, NOMBRE FROM GENEROS`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  }
+
+  //Devuelve los generos que puede tener una obra
+  exports.findAllSocialMedia = (req, res) => {
+  
+    const query = `SELECT ID_SOCIAL AS ID, NOMBRE FROM SOCIAL_MEDIA`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  }
+  
+  // Obtiene los datos de las redes sociales de la Obra
+  exports.findSocialMedia = (req, res) => {
+  
+    //La query devolverá los siguientes datos:
+    /**
+     * Nombre
+     * Link
+     */
+  
+    const { id: obra } = req.query
+    const query = `SELECT S.NOMBRE, T.LINK FROM TIENEN T INNER JOIN SOCIAL_MEDIA S ON T.ID_SOCIAL = S.ID_SOCIAL INNER JOIN OBRAS O ON T.ID_OBRA = O.ID_OBRA WHERE O.ID_OBRA = ${obra}`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  };

@@ -83,24 +83,6 @@ exports.devolverQueryEditObra = (type, obra, value) => {
 
 
 //Devuelve una query dependiento al valor de la variable Type
-exports.devolverQueryEditDemografia = (type, obra, demo) => {
-
-    let query = '';
-
-    if (parseInt(type)) {
-
-        query = `INSERT INTO SEGMENTADOS (ID_OBRA, ID_DEMOGRAFIA)
-        VALUES (${obra}, ${demo})
-        `;
-    } else {
-
-        query = `DELETE FROM SEGMENTADOS WHERE ID_OBRA = ${obra}`;
-    }
-
-    return query;
-}
-
-//Devuelve una query dependiento al valor de la variable Type
 exports.devolverQueryGenerateToken = (type, user, password) => {
 
     let query = '';

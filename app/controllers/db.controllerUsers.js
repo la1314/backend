@@ -45,62 +45,6 @@ exports.createUser = (req, res) => {
   });
 }
 
-//Devuelve los tipos de obras que pueden haber
-exports.findTipos = (req, res) => {
-
-  const query = `SELECT ID_TIPO, NOMBRE FROM TIPO`;
-
-  // if there is no error, you have the result
-  pool.query(query, (err, result) => {
-
-    // if any error while executing above query, throw error
-    if (err) throw new Error(err)
-
-    // if there is no error, you have the result
-    res.send(result);
-  });
-}
-
-//TODO Refactorizar para filtar por post
-
-//Devuelve los estados que puede tener una obra
-exports.findEstados = (req, res) => {
-
-  const query = `SELECT ID_ESTADO, NOMBRE FROM ESTADOS`;
-
-  // if there is no error, you have the result
-  pool.query(query, (err, result) => {
-
-    // if any error while executing above query, throw error
-    if (err) throw new Error(err)
-
-    // if there is no error, you have the result
-    res.send(result);
-  });
-}
-
-// Obtiene los datos de las redes sociales de la Obra
-exports.findSocialMedia = (req, res) => {
-
-  //La query devolverá los siguientes datos:
-  /**
-   * Nombre
-   * Link
-   */
-
-  const { id: obra } = req.query
-  const query = `SELECT S.NOMBRE, T.LINK FROM TIENEN T INNER JOIN SOCIAL_MEDIA S ON T.ID_SOCIAL = S.ID_SOCIAL INNER JOIN OBRAS O ON T.ID_OBRA = O.ID_OBRA WHERE O.ID_OBRA = ${obra}`;
-
-  // if there is no error, you have the result
-  pool.query(query, (err, result) => {
-
-    // if any error while executing above query, throw error
-    if (err) throw new Error(err)
-
-    // if there is no error, you have the result
-    res.send(result);
-  });
-};
 
 // Obtiene un Valor Booleano para saber si un Usuario sigue o no una Obra
 exports.findFollow = (req, res) => {
@@ -193,6 +137,3 @@ exports.generateToken = (req, res) => {
     }
   });
 }
-
-
-

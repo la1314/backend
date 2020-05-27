@@ -3,19 +3,19 @@ module.exports = (app) => {
     const withAuth = require('./middleware');
 
     //Da nombre al exportado con el cual se irán llamando las funciones de llamada
-    const db = require('../controllers/db.controller.js');
+    const dbU = require('../controllers/db.controllerUsers.js');
     const dbO = require('../controllers/db.controllerObra.js');
     const dbC = require('../controllers/db.controllerChapter.js');
 
     /** Lectores y Editores **/
     // Obtiene la ID de un editor -> editor (String)
-    app.post('/api/editor-id/', db.editorID);
+    app.post('/api/editor-id/', dbU.editorID);
 
     //Comprueba que el usuario ingresado existe -> type, username, email, password, phone
-    app.post('/api/create-user/', db.createUser);
+    app.post('/api/create-user/', dbU.createUser);
 
     //Comprueba que el usuario ingresado existe -> user, type
-    app.post('/api/check-user/', db.checkUser);
+    app.post('/api/check-user/', dbU.checkUser);
 
 
     /** Obras **/
@@ -29,25 +29,34 @@ module.exports = (app) => {
     app.post('/api/find-info-obra/', dbO.findInfoObra);
 
     // Obtiene los nombres y links de las redes sociales de una obra -> id
-    app.post('/api/find-social-media/', db.findSocialMedia);
+    app.post('/api/find-social-media/', dbO.findSocialMedia);
 
     // Obtiene la media de una obra -> id
     app.post('/api/find-avg-obra/', dbO.findAvgObra);
 
     // Obtiene los estados
-    app.post('/api/find-estados/', db.findEstados);
+    app.post('/api/find-estados/', dbO.findEstados);
+
+    // Obtiene los estados
+    app.post('/api/find-generos/', dbO.findGeneros);
 
     // Obtiene los tipos
-    app.post('/api/find-tipos/', db.findTipos);
+    app.post('/api/find-tipos/', dbO.findTipos);
+
+    // Obtiene las social media
+    app.post('/api/find-socialMedia/', dbO.findAllSocialMedia);
 
     // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> id(id obra), user(id user)
-    app.post('/api/find-follow/', db.findFollow);
+    app.post('/api/find-follow/', dbU.findFollow);
 
     // Obtiene datos de todas las obras de un editor -> editor (id editor)
     app.post('/api/find-all-editor-obras/', dbO.findAllEditorObras);
 
+    //Añade la demografia por defecto a una obra nueva
+    app.post('/api/default-demografia/', dbO.defaultDemografia);
+
     // Devuelve las Demografias
-    app.post('/api/find-all-demografias/', dbO.findAllDemografias);
+    app.post('/api/find-demografias/', dbO.findAllDemografias);
 
      // Edita la demografia de una obra
      app.post('/api/edit-demografia/', dbO.editDemografia);
@@ -61,7 +70,6 @@ module.exports = (app) => {
 
     
     
-
     /** Capítulos y paginas **/
     // Obtiene la infomación de los capítulos de una obra -> id
     app.post('/api/find-info-caps/', dbC.findInfoCaps);
@@ -73,7 +81,7 @@ module.exports = (app) => {
 
     /** Token **/
     //Genera un Token de session cuando los datos de login son correctos -> user, password, type
-    app.post('/api/generate-token/', db.generateToken);
+    app.post('/api/generate-token/', dbU.generateToken);
 
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
     app.get('/api/checkToken', withAuth, function (req, res) {
