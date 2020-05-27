@@ -58,18 +58,18 @@ module.exports = (app) => {
     // Devuelve las Demografias
     app.post('/api/find-demografias/', dbO.findAllDemografias);
 
-     // Edita la demografia de una obra
-     app.post('/api/edit-demografia/', dbO.editDemografia);
+    // Edita la demografia de una obra
+    app.post('/api/edit-demografia/', dbO.editDemografia);
 
-     // Obtiene la demografia de una obra
-     app.post('/api/get-demografia/', dbO.getDemografia);
+    // Obtiene la demografia de una obra
+    app.post('/api/get-demografia/', dbO.getDemografia);
 
     // Edita los parámetros de una obra -> type (int), obra (id obra), value (Valor nuevo)
     // Type: 1:NOMBRE, 2:AUTOR, 3:LANZAMIENTO, 4: DESCRIPTION, 5:COVER
     app.post('/api/edit-obra/', dbO.editObra);
 
-    
-    
+
+
     /** Capítulos y paginas **/
     // Obtiene la infomación de los capítulos de una obra -> id
     app.post('/api/find-info-caps/', dbC.findInfoCaps);
@@ -97,6 +97,14 @@ module.exports = (app) => {
         //res.status(200).send((user).toString())
         res.json(json)
     });
+
+    /** Consultar compartidas **/
+    // Edita la visibilidad de una obra o capítulo
+    app.post('/api/find-visibilidad/', dbO.findVisibilidad);
+
+    // Devuelve la visibilidad de una obra o capítulo
+    app.post('/api/edit-visibilidad/', dbO.editVisibilidad);
+
 
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
     app.post('/api/clear', function (req, res) {

@@ -53,7 +53,7 @@ exports.findInfoObra = (req, res) => {
      * Lanzamiento
      */
     const { obra } = req.query
-    const query = `SELECT NOMBRE, AUTOR, DESCRIPCION, COVER, LANZAMIENTO FROM OBRAS
+    const query = `SELECT NOMBRE, AUTOR, DESCRIPCION, COVER, LANZAMIENTO, CASE VISIBILIDAD WHEN 0 THEN 'OCULTO' ELSE 'VISIBLE' END AS VISIBILIDAD FROM OBRAS
     WHERE ID_OBRA = ${obra}`;
 
     // if there is no error, you have the result
@@ -305,6 +305,54 @@ exports.findTipos = (req, res) => {
   
     const { id: obra } = req.query
     const query = `SELECT S.NOMBRE, T.LINK FROM TIENEN T INNER JOIN SOCIAL_MEDIA S ON T.ID_SOCIAL = S.ID_SOCIAL INNER JOIN OBRAS O ON T.ID_OBRA = O.ID_OBRA WHERE O.ID_OBRA = ${obra}`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  };
+
+
+  // Devuelve la visibilidad de una obra o capítulo
+  //TODO CAPITULO
+  exports.findVisibilidad = (req, res) => {
+  
+    //La query devolverá los siguientes datos:
+    /**
+     * OCULTO: 0, VISIBLE: 1
+     */
+  
+    const { id } = req.query
+    const query = `SELECT CASE VISIBILIDAD WHEN 0 THEN 'OCULTO' ELSE 'VISIBLE' END AS VISIBILIDAD FROM OBRAS
+    WHERE ID_OBRA = ${id}`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  };
+
+
+  // Edita la visibilidad de una obra o capítulo
+  exports.editVisibilidad = (req, res) => {
+  
+    //La query devolverá los siguientes datos:
+    /**
+     * OCULTO: 0, VISIBLE: 1
+     */
+  
+    const { id, value } = req.query
+    const query = `UPDATE OBRAS SET VISIBILIDAD = '${value}' WHERE ID_OBRA = ${id}`;
   
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
