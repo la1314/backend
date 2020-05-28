@@ -52,7 +52,7 @@ exports.devolverQueryCheckUser = (type, user) => {
 exports.devolverQueryEditObra = (type, obra, value) => {
 
     let query = '';
-
+    //Ver de añadir eliminiar obra, edit estado
     switch (parseInt(type)) {
         case 1:
             query = `UPDATE OBRAS SET NOMBRE = '${value}' WHERE ID_OBRA = ${obra}`;
@@ -84,6 +84,14 @@ exports.devolverQueryEditObra = (type, obra, value) => {
 
         case 8:
             query = `UPDATE OBRAS SET ID_TIPO = ${value} WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 9:
+            query = `UPDATE SEGMENTADOS SET ID_DEMOGRAFIA = ${value} WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 11:
+            query = `DELETE FROM OBRAS WHERE ID_OBRA = ${obra}`;
             break;
 
         default:

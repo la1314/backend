@@ -53,9 +53,11 @@ exports.findInfoObra = (req, res) => {
      * Lanzamiento
      */
     const { obra } = req.query
-    const query = `SELECT NOMBRE, AUTOR, DESCRIPCION, COVER, LANZAMIENTO, VISIBILIDAD, ID_ESTADO AS ESTADOVALUE, ID_TIPO AS TIPO
-    FROM OBRAS
-    WHERE ID_OBRA = ${obra}`;
+    const query = `SELECT O.NOMBRE, O.AUTOR, O.DESCRIPCION, O.COVER, O.LANZAMIENTO,
+                   O.VISIBILIDAD, O.ID_ESTADO AS ESTADOVALUE, O.ID_TIPO AS TIPO, S.ID_DEMOGRAFIA AS DEMOGRAFIA 
+    FROM OBRAS O
+    INNER JOIN SEGMENTADOS S ON S.ID_OBRA = O.ID_OBRA
+    WHERE O.ID_OBRA = ${obra}`;
 
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
