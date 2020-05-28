@@ -74,6 +74,18 @@ exports.devolverQueryEditObra = (type, obra, value) => {
             query = `UPDATE OBRAS SET COVER = '${value}' WHERE ID_OBRA = ${obra}`;
             break;
 
+        case 6:
+            query = `UPDATE OBRAS SET ID_ESTADO = ${value} WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 7:
+            query = `UPDATE OBRAS SET VISIBILIDAD = '${value}' WHERE ID_OBRA = ${obra}`;
+            break;
+
+        case 8:
+            query = `UPDATE OBRAS SET ID_TIPO = ${value} WHERE ID_OBRA = ${obra}`;
+            break;
+
         default:
             break;
     }

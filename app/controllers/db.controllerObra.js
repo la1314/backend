@@ -53,7 +53,8 @@ exports.findInfoObra = (req, res) => {
      * Lanzamiento
      */
     const { obra } = req.query
-    const query = `SELECT NOMBRE, AUTOR, DESCRIPCION, COVER, LANZAMIENTO, CASE VISIBILIDAD WHEN 0 THEN 'OCULTO' ELSE 'VISIBLE' END AS VISIBILIDAD FROM OBRAS
+    const query = `SELECT NOMBRE, AUTOR, DESCRIPCION, COVER, LANZAMIENTO, VISIBILIDAD, ID_ESTADO AS ESTADOVALUE, ID_TIPO AS TIPO
+    FROM OBRAS
     WHERE ID_OBRA = ${obra}`;
 
     // if there is no error, you have the result
@@ -214,7 +215,7 @@ exports.getDemografia = (req, res) => {
 
     const { obra } = req.query
 
-    const query = `SELECT D.NOMBRE AS NOMBRE FROM SEGMENTADOS S
+    const query = `SELECT D.NOMBRE AS NOMBRE, D.ID_DEMOGRAFIA AS ID FROM SEGMENTADOS S
      INNER JOIN DEMOGRAFIAS D ON D.ID_DEMOGRAFIA = S.ID_DEMOGRAFIA
      WHERE S.ID_OBRA = ${obra}
      `;
@@ -233,7 +234,7 @@ exports.getDemografia = (req, res) => {
 //Devuelve los tipos de obras que pueden haber
 exports.findTipos = (req, res) => {
 
-    const query = `SELECT ID_TIPO, NOMBRE FROM TIPO`;
+    const query = `SELECT ID_TIPO AS ID, NOMBRE FROM TIPO`;
   
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -328,8 +329,7 @@ exports.findTipos = (req, res) => {
      */
   
     const { id } = req.query
-    const query = `SELECT CASE VISIBILIDAD WHEN 0 THEN 'OCULTO' ELSE 'VISIBLE' END AS VISIBILIDAD FROM OBRAS
-    WHERE ID_OBRA = ${id}`;
+    const query = `SELECT VISIBILIDAD FROM OBRAS WHERE ID_OBRA = ${id}`;
   
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -342,17 +342,16 @@ exports.findTipos = (req, res) => {
     });
   };
 
-
-  // Edita la visibilidad de una obra o capítulo
-  exports.editVisibilidad = (req, res) => {
+  //Devuelve el nombre de un estado
+  exports.getEstado = (req, res) => {
   
     //La query devolverá los siguientes datos:
     /**
-     * OCULTO: 0, VISIBLE: 1
+     *NOMBRE
      */
   
-    const { id, value } = req.query
-    const query = `UPDATE OBRAS SET VISIBILIDAD = '${value}' WHERE ID_OBRA = ${id}`;
+    const { id } = req.query
+    const query = `SELECT NOMBRE FROM ESTADOS WHERE ID_ESTADO = ${id}`;
   
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -364,3 +363,33 @@ exports.findTipos = (req, res) => {
       res.send(result);
     });
   };
+
+  //Devuelve el nombre de un estado
+  exports.getTipo = (req, res) => {
+  
+    //La query devolverá los siguientes datos:
+    /**
+     *NOMBRE
+     */
+  
+    const { id } = req.query
+    const query = `SELECT NOMBRE FROM TIPO WHERE ID_TIPO = ${id}`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  };
+
+
+
+
+
+  /**
+   * CASE VISIBILIDAD WHEN 0 THEN 'OCULTO' ELSE 'VISIBLE' END AS VISIBILIDAD
+   */

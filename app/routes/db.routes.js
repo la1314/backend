@@ -64,9 +64,16 @@ module.exports = (app) => {
     // Obtiene la demografia de una obra
     app.post('/api/get-demografia/', dbO.getDemografia);
 
+    // Obtiene el nombre y el id de un estado
+    app.post('/api/get-estado/', dbO.getEstado);
+
+    // Obtiene el tipo de una obra
+    app.post('/api/get-tipo/', dbO.getTipo);
+
     // Edita los parámetros de una obra -> type (int), obra (id obra), value (Valor nuevo)
     // Type: 1:NOMBRE, 2:AUTOR, 3:LANZAMIENTO, 4: DESCRIPTION, 5:COVER
     app.post('/api/edit-obra/', dbO.editObra);
+
 
 
 
@@ -102,8 +109,7 @@ module.exports = (app) => {
     // Edita la visibilidad de una obra o capítulo
     app.post('/api/find-visibilidad/', dbO.findVisibilidad);
 
-    // Devuelve la visibilidad de una obra o capítulo
-    app.post('/api/edit-visibilidad/', dbO.editVisibilidad);
+ 
 
 
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
