@@ -71,7 +71,7 @@ exports.devolverQueryEditObra = (type, obra, value) => {
             break;
 
         case 5:
-            query = `UPDATE OBRAS SET COVER = '${value}' WHERE ID_OBRA = ${obra}`;
+            query = `UPDATE OBRAS SET COVER = 'https://tuinki.gupoe.com/media/${value}' WHERE ID_OBRA = ${obra}`;
             break;
 
         case 6:
@@ -90,7 +90,15 @@ exports.devolverQueryEditObra = (type, obra, value) => {
             query = `UPDATE SEGMENTADOS SET ID_DEMOGRAFIA = ${value} WHERE ID_OBRA = ${obra}`;
             break;
 
+        case 10:
+            query = `INSERT INTO CLASIFICADOS (ID_OBRA, ID_GENERO) VALUES (${obra}, ${value})`;
+            break;
+
         case 11:
+            query = `DELETE FROM CLASIFICADOS WHERE ID_OBRA = ${obra} AND ID_GENERO = ${value}`;
+            break;
+
+        case 15:
             query = `DELETE FROM OBRAS WHERE ID_OBRA = ${obra}`;
             break;
 

@@ -38,7 +38,13 @@ module.exports = (app) => {
     app.post('/api/find-estados/', dbO.findEstados);
 
     // Obtiene los estados
+    app.post('/api/find-cover/', dbO.findCover);
+
+    // Obtiene los generos que puede tener una obra
     app.post('/api/find-generos/', dbO.findGeneros);
+
+    // Obtiene los generos actuales de una obra
+    app.post('/api/find-generos-actuales/', dbO.findGenerosActuales);
 
     // Obtiene los tipos
     app.post('/api/find-tipos/', dbO.findTipos);

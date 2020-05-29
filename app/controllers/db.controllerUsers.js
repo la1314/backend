@@ -125,7 +125,7 @@ exports.generateToken = (req, res) => {
         // Issue token
         const payload = { 'user': user, 'idUser': result[0].idUser, 'idRol': result[0].idRol };
         const token = jwt.sign(payload, secret, {
-          expiresIn: '5h'
+          expiresIn: '48h'
         });
         res.cookie('token', token, { httpOnly: true, SameSite: 'None' })
           .status(200).send('1');

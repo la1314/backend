@@ -268,7 +268,29 @@ exports.findTipos = (req, res) => {
   //Devuelve los generos que puede tener una obra
   exports.findGeneros = (req, res) => {
   
-    const query = `SELECT ID_GENERO AS ID, NOMBRE FROM GENEROS`;
+    const query = `SELECT ID_GENERO AS ID, NOMBRE FROM GENEROS ORDER BY NOMBRE`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+  }
+
+  //Devuelve los generos que puede tener una obra
+  exports.findGenerosActuales = (req, res) => {
+  
+    const { obra } = req.query
+    
+    const query = `SELECT C.ID_GENERO AS ID, G.NOMBRE 
+    FROM CLASIFICADOS C
+    INNER JOIN GENEROS G ON G.ID_GENERO = C.ID_GENERO
+    WHERE C.ID_OBRA = ${obra}
+    ORDER BY G.NOMBRE`;
   
     // if there is no error, you have the result
     poolObra.query(query, (err, result) => {
@@ -320,6 +342,27 @@ exports.findTipos = (req, res) => {
     });
   };
 
+  // Devuelve el cover de una obra
+  exports.findCover = (req, res) => {
+  
+    //La query devolverá los siguientes datos:
+    /**
+     * Devuelve la ruta del cover de la obra actual
+     */
+  
+    const { obra } = req.query
+    const query = `SELECT COVER FROM OBRAS WHERE ID_OBRA = ${obra}`;
+  
+    // if there is no error, you have the result
+    poolObra.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result[0].COVER);
+    });
+  };
 
   // Devuelve la visibilidad de una obra o capítulo
   //TODO CAPITULO
