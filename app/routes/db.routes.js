@@ -88,13 +88,18 @@ module.exports = (app) => {
     // Añade un nuevo capitulo -> obra, number, name, date, visibilidad
     app.post('/api/new-chapter/', dbC.newChapter);
 
-
     // Obtiene la infomación de los capítulos de una obra -> id
     app.post('/api/find-info-caps/', dbC.findInfoCaps);
 
     // Obtiene los capítulos que ha leido un usuario en una determinada Obra
     //ID & USER
     app.post('/api/find-leidos/', dbC.findLeidos);
+
+    // Devuelve los capitulos de una obra -> obra (id obra)
+    app.post('/api/find-chapters/', dbC.findChapters);
+
+    // Devuelve los capitulos de una obra -> obra (id obra)
+    app.post('/api/find-info-chapter/', dbC.findInfoChapter);
 
 
     /** Token **/
@@ -120,7 +125,7 @@ module.exports = (app) => {
     // Edita la visibilidad de una obra o capítulo
     app.post('/api/find-visibilidad/', dbO.findVisibilidad);
 
- 
+
 
 
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
