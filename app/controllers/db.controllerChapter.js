@@ -1,5 +1,25 @@
 const poolChapter = require('../models/db.model.js');
 
+//Añane un nuevo capítulo a una obra
+exports.newChapter = (req, res) => {
+
+  const { obra, name, number, date, visibilidad } = req.query
+
+  const query = `INSERT INTO CAPITULOS 
+(ID_CAPITULO, ID_OBRA, NUMERO, NOMBRE, FECHA, VISIBILIDAD)
+VALUES (NULL, ${obra}, ${number}, "${name}", "${date}", ${visibilidad})`
+
+  // if there is no error, you have the result
+  poolChapter.query(query, (err, result) => {
+
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+
+      // if there is no error, you have the result
+      res.send(result);
+  });
+}
+
 // Obtiene la infomación de los capítulos de una obra
 exports.findInfoCaps = (req, res) => {
 

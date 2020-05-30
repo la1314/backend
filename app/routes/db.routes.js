@@ -84,6 +84,11 @@ module.exports = (app) => {
 
 
     /** Capítulos y paginas **/
+
+    // Añade un nuevo capitulo -> obra, number, name, date, visibilidad
+    app.post('/api/new-chapter/', dbC.newChapter);
+
+
     // Obtiene la infomación de los capítulos de una obra -> id
     app.post('/api/find-info-caps/', dbC.findInfoCaps);
 
