@@ -128,3 +128,66 @@ exports.findChapters = (req, res) => {
     res.send(result);
   });
 }
+
+// Obtiene los Capítulos de una determinada Obra
+exports.findChaptersPages = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * RUTA, NUMERO
+   */
+
+  const { chapter } = req.query;
+
+  const query = `SELECT RUTA, NUMERO FROM PAGINAS WHERE ID_CAPITULO = ${chapter} ORDER BY NUMERO`;
+
+  // if there is no error, you have the result
+  poolChapter.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Añade paginas un capitulo
+exports.addChapterPages = (req, res) => {
+
+  const { chapter, rutas, numeros } = req.query;
+
+  //TODO GENERAR QUERY
+
+  let cadena = `INSERT INTO PAGINAS (ID_PAGINA, ID_CAPITULO, RUTA, NUMERO) VALUES`;
+
+  const regex = /"/gi;
+  const regex2 = /}/gi;
+
+  for (let index = 0; index < numeros.length; index++) {
+
+    let ruta = rutas[index].split(':');
+    ruta = ruta[1].replace(regex, '').replace(regex2, '');
+    let number = numeros[index];
+
+    if (index !== numeros.length-1) {
+
+      cadena += " (NULL,"+chapter+", 'https://tuinki.gupoe.com/media/"+ruta+"', "+number+"),";
+
+    } else {
+      cadena += "(NULL, "+chapter+", 'https://tuinki.gupoe.com/media/"+ruta+"', "+number+")";
+    }
+  }
+
+  const query = cadena;
+
+  // if there is no error, you have the result
+  poolChapter.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}

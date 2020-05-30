@@ -101,6 +101,12 @@ module.exports = (app) => {
     // Devuelve los capitulos de una obra -> obra (id obra)
     app.post('/api/find-info-chapter/', dbC.findInfoChapter);
 
+    // Devuelve los capitulos de una obra -> chapter (id capitulo)
+    app.post('/api/find-chapter-pages/', dbC.findChaptersPages);
+
+    // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
+    app.post('/api/add-chapter-pages/', dbC.addChapterPages);
+
 
     /** Token **/
     //Genera un Token de session cuando los datos de login son correctos -> user, password, type
