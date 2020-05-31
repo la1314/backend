@@ -107,6 +107,9 @@ module.exports = (app) => {
     // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
     app.post('/api/add-chapter-pages/', dbC.addChapterPages);
 
+    // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
+    app.post('/api/delete-page/', withAuth, dbC.deletePage);
+
 
     /** Token **/
     //Genera un Token de session cuando los datos de login son correctos -> user, password, type

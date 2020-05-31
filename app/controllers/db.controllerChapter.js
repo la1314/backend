@@ -139,7 +139,7 @@ exports.findChaptersPages = (req, res) => {
 
   const { chapter } = req.query;
 
-  const query = `SELECT RUTA, NUMERO FROM PAGINAS WHERE ID_CAPITULO = ${chapter} ORDER BY NUMERO`;
+  const query = `SELECT ID_PAGINA AS ID, RUTA, NUMERO FROM PAGINAS WHERE ID_CAPITULO = ${chapter} ORDER BY NUMERO`;
 
   // if there is no error, you have the result
   poolChapter.query(query, (err, result) => {
@@ -150,6 +150,34 @@ exports.findChaptersPages = (req, res) => {
     // if there is no error, you have the result
     res.send(result);
   });
+}
+
+// Elimina la pagina de un capitulo
+exports.deletePage = (req, res) => {
+
+  const rol = req.rol;
+ 
+  if (rol === 'EDITOR') {
+
+    const { page } = req.query;
+
+    const query = `DELETE FROM PAGINAS WHERE ID_PAGINA = ${page}`;
+  
+    // if there is no error, you have the result
+    poolChapter.query(query, (err, result) => {
+  
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+  
+      // if there is no error, you have the result
+      res.send(result);
+    });
+
+  } else {
+    res.send('0')
+  }
+
+  
 }
 
 // Añade paginas un capitulo
@@ -170,12 +198,12 @@ exports.addChapterPages = (req, res) => {
     ruta = ruta[1].replace(regex, '').replace(regex2, '');
     let number = numeros[index];
 
-    if (index !== numeros.length-1) {
+    if (index !== numeros.length - 1) {
 
-      cadena += " (NULL,"+chapter+", 'https://tuinki.gupoe.com/media/"+ruta+"', "+number+"),";
+      cadena += " (NULL," + chapter + ", 'https://tuinki.gupoe.com/media/" + ruta + "', " + number + "),";
 
     } else {
-      cadena += "(NULL, "+chapter+", 'https://tuinki.gupoe.com/media/"+ruta+"', "+number+")";
+      cadena += "(NULL, " + chapter + ", 'https://tuinki.gupoe.com/media/" + ruta + "', " + number + ")";
     }
   }
 
