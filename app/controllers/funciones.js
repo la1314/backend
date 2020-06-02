@@ -111,6 +111,36 @@ exports.devolverQueryEditObra = (type, obra, value) => {
 
 
 //Devuelve una query dependiento al valor de la variable Type
+exports.devolverQueryEditChapter = (type, id, value) => {
+
+    let query = '';
+    //Ver de añadir eliminiar obra, edit estado
+    switch (parseInt(type)) {
+        case 1:
+            query = `UPDATE CAPITULOS SET NUMERO = ${value} WHERE ID_CAPITULO = ${id}`;
+            break;
+
+        case 2:
+            query = `UPDATE CAPITULOS SET NOMBRE = '${value}' WHERE ID_CAPITULO = ${id}`;
+            break;
+
+        case 3:
+            query = `UPDATE CAPITULOS SET FECHA = '${value}' WHERE ID_CAPITULO = ${id}`;
+            break;
+
+        case 4:
+            query = `UPDATE CAPITULOS SET VISIBILIDAD = ${value} WHERE ID_CAPITULO = ${id}`;
+            break;
+
+        default:
+            break;
+    }
+
+    return query;
+}
+
+
+//Devuelve una query dependiento al valor de la variable Type
 exports.devolverQueryGenerateToken = (type, user, password) => {
 
     let query = '';
@@ -119,26 +149,18 @@ exports.devolverQueryGenerateToken = (type, user, password) => {
 
         query = `SELECT 
                   (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano,
-                  ID_EDITOR AS idUser,
-                  R.NOMBRE AS idRol
-                  FROM
-                  EDITORES E
+                  ID_EDITOR AS idUser, R.NOMBRE AS idRol
+                  FROM EDITORES E
                   INNER JOIN ROLES R ON R.ID_ROL = E.ID_ROL
-                  WHERE
-                  EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'
-                  `;
+                  WHERE EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'`;
     } else {
 
         query = `SELECT 
-      (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano,
-      ID_USUARIO AS idUser,
-      R.NOMBRE AS idRol
-      FROM
-      USUARIOS U
-      INNER JOIN ROLES R ON R.ID_ROL = U.ID_ROL
-      WHERE
-      EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'
-      `;
+                (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano,
+                ID_USUARIO AS idUser, R.NOMBRE AS idRol
+                FROM USUARIOS U
+                INNER JOIN ROLES R ON R.ID_ROL = U.ID_ROL
+                WHERE EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'`;
     }
 
     return query;

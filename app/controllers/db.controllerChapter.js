@@ -1,4 +1,5 @@
 const poolChapter = require('../models/db.model.js');
+const toolQueryChapter = require('./funciones.js');
 
 //Añane un nuevo capítulo a una obra
 exports.newChapter = (req, res) => {
@@ -77,34 +78,7 @@ exports.findInfoChapter = (req, res) => {
   });
 }
 
-// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
-exports.findLeidos = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
-  const obra = req.query.id;
-  const user = req.query.user;
-
-  const query = `SELECT L.ID_CAPITULO
-                   FROM LEEN L
-                   INNER JOIN CAPITULOS C ON C.ID_CAPITULO = L.ID_CAPITULO
-                   INNER JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA 
-                   WHERE O.ID_OBRA = ${obra} AND L.ID_USUARIO = ${user}
-                  `;
-
-  // if there is no error, you have the result
-  poolChapter.query(query, (err, result) => {
-
-    // if any error while executing above query, throw error
-    if (err) throw new Error(err)
-
-    // if there is no error, you have the result
-    res.send(result);
-  });
-}
 
 // Obtiene los Capítulos de una determinada Obra
 exports.findChapters = (req, res) => {
@@ -176,8 +150,6 @@ exports.deletePage = (req, res) => {
   } else {
     res.send('0')
   }
-
-  
 }
 
 // Añade paginas un capitulo
@@ -188,7 +160,6 @@ exports.addChapterPages = (req, res) => {
   //TODO GENERAR QUERY
 
   let cadena = `INSERT INTO PAGINAS (ID_PAGINA, ID_CAPITULO, RUTA, NUMERO) VALUES`;
-
   const regex = /"/gi;
   const regex2 = /}/gi;
 
@@ -208,6 +179,46 @@ exports.addChapterPages = (req, res) => {
   }
 
   const query = cadena;
+
+  // if there is no error, you have the result
+  poolChapter.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Edita dependiendo al valor de type los parámetros de un capítulo o pagina
+exports.editChapterAndPages = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * Actualizara los un parámetro de un capítulo o pagina
+   */
+
+  const { type, id, value } = req.query
+  const query = toolQueryChapter.devolverQueryEditChapter(type, id, value);
+
+  // if there is no error, you have the result
+  poolChapter.query(query, (err, result) => {
+
+      // if any error while executing above query, throw error
+      if (err) throw new Error(err)
+
+      // if there is no error, you have the result
+      res.send(result);
+  });
+};
+
+// Modifica el numero de una pagina
+exports.editPageNumber = (req, res) => {
+
+  const { page, value } = req.query;
+
+  const query = `UPDATE PAGINAS SET NUMERO = ${value} WHERE ID_PAGINA = ${page}`;
 
   // if there is no error, you have the result
   poolChapter.query(query, (err, result) => {

@@ -52,9 +52,6 @@ module.exports = (app) => {
     // Obtiene las social media
     app.post('/api/find-socialMedia/', dbO.findAllSocialMedia);
 
-    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> id(id obra), user(id user)
-    app.post('/api/find-follow/', dbU.findFollow);
-
     // Obtiene datos de todas las obras de un editor -> editor (id editor)
     app.post('/api/find-all-editor-obras/', dbO.findAllEditorObras);
 
@@ -81,8 +78,6 @@ module.exports = (app) => {
     app.post('/api/edit-obra/', dbO.editObra);
 
 
-
-
     /** Capítulos y paginas **/
 
     // Añade un nuevo capitulo -> obra, number, name, date, visibilidad
@@ -90,10 +85,6 @@ module.exports = (app) => {
 
     // Obtiene la infomación de los capítulos de una obra -> id
     app.post('/api/find-info-caps/', dbC.findInfoCaps);
-
-    // Obtiene los capítulos que ha leido un usuario en una determinada Obra
-    //ID & USER
-    app.post('/api/find-leidos/', dbC.findLeidos);
 
     // Devuelve los capitulos de una obra -> obra (id obra)
     app.post('/api/find-chapters/', dbC.findChapters);
@@ -110,6 +101,12 @@ module.exports = (app) => {
     // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
     app.post('/api/delete-page/', withAuth, dbC.deletePage);
 
+    // Edita dependiendo al valor de type los parámetros de un capítulo o pagina -> type, id, value
+    app.post('/api/edit-chapter-pages/', withAuth, dbC.editChapterAndPages);
+
+    // Edita el numero de una pagina -> page (ID pagina), value
+    app.post('/api/edit-page-number/', withAuth, dbC.editPageNumber);
+
 
     /** Token **/
     //Genera un Token de session cuando los datos de login son correctos -> user, password, type
@@ -121,10 +118,7 @@ module.exports = (app) => {
         const user = req.user;
         const rol = req.rol;
 
-        const json = {
-            user: user,
-            rol: rol
-        }
+        const json = { user: user, rol: rol }
 
         //res.status(200).send((user).toString())
         res.json(json)
@@ -134,12 +128,23 @@ module.exports = (app) => {
     // Edita la visibilidad de una obra o capítulo
     app.post('/api/find-visibilidad/', dbO.findVisibilidad);
 
-
-
-
     //Consulta usada para verificar que el usuario tiene el Token para seguir logeado
     app.post('/api/clear', function (req, res) {
 
         res.clearCookie('token').send('1');
     });
+
+    /** Vista del Lector **/
+
+    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> id(id obra), user(id user)
+    app.post('/api/find-follow/', dbU.findFollow);
+
+    // Obtiene los capítulos que ha leido un usuario en una determinada Obra
+    //ID & USER
+    app.post('/api/find-leidos/', dbU.findLeidos);
+
+    //Obtiene las últimas 25 obras que han subido un nuevo capítulo
+    app.post('/api/find-recientes/', dbU.findRecientes);
 }
+
+
