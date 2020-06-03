@@ -52,7 +52,7 @@ exports.devolverQueryCheckUser = (type, user) => {
 exports.devolverQueryEditObra = (type, obra, value) => {
 
     let query = '';
-    //Ver de añadir eliminiar obra, edit estado
+    
     switch (parseInt(type)) {
         case 1:
             query = `UPDATE OBRAS SET NOMBRE = '${value}' WHERE ID_OBRA = ${obra}`;
@@ -114,7 +114,7 @@ exports.devolverQueryEditObra = (type, obra, value) => {
 exports.devolverQueryEditChapter = (type, id, value) => {
 
     let query = '';
-    //Ver de añadir eliminiar obra, edit estado
+    
     switch (parseInt(type)) {
         case 1:
             query = `UPDATE CAPITULOS SET NUMERO = ${value} WHERE ID_CAPITULO = ${id}`;
@@ -147,17 +147,13 @@ exports.devolverQueryGenerateToken = (type, user, password) => {
 
     if (parseInt(type)) {
 
-        query = `SELECT 
-                  (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano,
-                  ID_EDITOR AS idUser, R.NOMBRE AS idRol
+        query = `SELECT (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano, ID_EDITOR AS idUser, R.NOMBRE AS idRol
                   FROM EDITORES E
                   INNER JOIN ROLES R ON R.ID_ROL = E.ID_ROL
                   WHERE EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'`;
     } else {
 
-        query = `SELECT 
-                (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano,
-                ID_USUARIO AS idUser, R.NOMBRE AS idRol
+        query = `SELECT (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano, ID_USUARIO AS idUser, R.NOMBRE AS idRol
                 FROM USUARIOS U
                 INNER JOIN ROLES R ON R.ID_ROL = U.ID_ROL
                 WHERE EMAIL LIKE '${user}' OR USERNAME LIKE '${user}'`;

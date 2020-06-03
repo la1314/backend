@@ -31,5 +31,15 @@ app.get('/api/', (req, res) => {
 // Require bd routes
 require('./app/routes/db.routes.js')(app);
 
+//The 404 Route (ALWAYS Keep this as the last route)
+app.get('*', function (req, res) {
+    res.status(404).send('ÒwÓ > UwU');
+});
+
+//The 404 Route (ALWAYS Keep this as the last route)
+app.post('*', function (req, res) {
+    res.status(404).send('ÒwÓ > UwU');
+});
+
 // Escuchemos en un puerto
 app.listen(port, () => console.log(`* [ mcnreader ] UP and Running en http://localhost: ${port}`));

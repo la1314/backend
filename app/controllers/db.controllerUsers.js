@@ -136,7 +136,7 @@ exports.findLeidos = (req, res) => {
    * ID de los capítulos leidos
    */
 
-  const {obra, user} = req.query
+  const { obra, user } = req.query
 
   const query = `SELECT L.ID_CAPITULO
                    FROM LEEN L
@@ -167,8 +167,103 @@ exports.findRecientes = (req, res) => {
                   FROM CAPITULOS C 
                   INNER JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA 
                   INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
-                  WHERE C.VISIBILIDAD = 1
+                  WHERE C.VISIBILIDAD = 1 AND O.VISIBILIDAD = 1
                   GROUP BY OBRA ORDER BY C.FECHA DESC LIMIT 25`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
+exports.findUserDetails = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * ID de los capítulos leidos
+   */
+
+  const user = req.rol;
+
+  const query = `SELECT EMAIL, USERNAME FROM USUARIOS WHERE ID_USUARIO = ${user}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
+exports.checkUserPassword = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * ID de los capítulos leidos
+   */
+
+  const user = req.rol;
+
+  const query = `SELECT (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano
+  FROM USUARIOS 
+  WHERE ID_USUARIO = '${user}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
+exports.findEditorDetails = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * ID de los capítulos leidos
+   */
+
+  const user = req.rol;
+
+  const query = `SELECT EMAIL, USERNAME, PHONE FROM EDITORES WHERE ID_EDITOR = ${user}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
+exports.checkEditorPassword = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * ID de los capítulos leidos
+   */
+  const user = req.rol;
+
+  const query = `SELECT (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano
+  FROM EDITORES 
+  WHERE ID_EDITOR = '${user}`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {

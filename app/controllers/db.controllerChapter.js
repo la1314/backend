@@ -113,7 +113,7 @@ exports.findChaptersPages = (req, res) => {
 
   const { chapter } = req.query;
 
-  const query = `SELECT ID_PAGINA AS ID, RUTA, NUMERO FROM PAGINAS WHERE ID_CAPITULO = ${chapter} ORDER BY NUMERO`;
+  const query = `SELECT ID_PAGINA AS ID, RUTA, NUMERO, ESTILO FROM PAGINAS WHERE ID_CAPITULO = ${chapter} ORDER BY NUMERO`;
 
   // if there is no error, you have the result
   poolChapter.query(query, (err, result) => {
@@ -219,6 +219,25 @@ exports.editPageNumber = (req, res) => {
   const { page, value } = req.query;
 
   const query = `UPDATE PAGINAS SET NUMERO = ${value} WHERE ID_PAGINA = ${page}`;
+
+  // if there is no error, you have the result
+  poolChapter.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+
+// Modifica el numero de una pagina 0:Simple 1:Doble 
+exports.editPageStyle = (req, res) => {
+
+  const { page, value } = req.query;
+
+  const query = `UPDATE PAGINAS SET ESTILO = ${value} WHERE ID_PAGINA = ${page}`;
 
   // if there is no error, you have the result
   poolChapter.query(query, (err, result) => {

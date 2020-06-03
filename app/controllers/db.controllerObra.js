@@ -154,8 +154,7 @@ exports.defaultDemografia = (req, res) => {
 
   const { obra } = req.query
 
-  const query = `INSERT INTO SEGMENTADOS (ID_OBRA, ID_DEMOGRAFIA)
-    VALUES (${obra}, 16)`;
+  const query = `INSERT INTO SEGMENTADOS (ID_OBRA, ID_DEMOGRAFIA) VALUES (${obra}, 16)`;
 
   // if there is no error, you have the result
   poolObra.query(query, (err, result) => {

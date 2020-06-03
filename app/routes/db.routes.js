@@ -17,6 +17,15 @@ module.exports = (app) => {
     //Comprueba que el usuario ingresado existe -> user, type
     app.post('/api/check-user/', dbU.checkUser);
 
+    //Comprueba que el usuario ingresado existe -> user, type
+    app.post('/api/check-user/', withAuth, dbU.findUserDetails);
+    //Comprueba que el usuario ingresado existe -> user, type
+    app.post('/api/check-user/', withAuth, dbU.checkUserPassword);
+    //Comprueba que el usuario ingresado existe -> user, type
+    app.post('/api/check-user/', withAuth, dbU.findEditorDetails);    
+    //Comprueba que el usuario ingresado existe -> user, type
+    app.post('/api/check-user/', withAuth, dbU.checkEditorPassword);
+
 
     /** Obras **/
     // Añade una obra nueva -> editor, name, autor, lanzamiento, estado, tipo, visibilidad
@@ -81,7 +90,7 @@ module.exports = (app) => {
     /** Capítulos y paginas **/
 
     // Añade un nuevo capitulo -> obra, number, name, date, visibilidad
-    app.post('/api/new-chapter/', dbC.newChapter);
+    app.post('/api/new-chapter/', withAuth, dbC.newChapter);
 
     // Obtiene la infomación de los capítulos de una obra -> id
     app.post('/api/find-info-caps/', dbC.findInfoCaps);
@@ -96,7 +105,7 @@ module.exports = (app) => {
     app.post('/api/find-chapter-pages/', dbC.findChaptersPages);
 
     // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
-    app.post('/api/add-chapter-pages/', dbC.addChapterPages);
+    app.post('/api/add-chapter-pages/', withAuth, dbC.addChapterPages);
 
     // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
     app.post('/api/delete-page/', withAuth, dbC.deletePage);
@@ -106,6 +115,9 @@ module.exports = (app) => {
 
     // Edita el numero de una pagina -> page (ID pagina), value
     app.post('/api/edit-page-number/', withAuth, dbC.editPageNumber);
+
+    // Edita el estilo de una pagina -> page (ID pagina), value
+    app.post('/api/edit-page-style/', withAuth, dbC.editPageStyle);
 
 
     /** Token **/
