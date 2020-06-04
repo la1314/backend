@@ -52,7 +52,7 @@ exports.devolverQueryCheckUser = (type, user) => {
 exports.devolverQueryEditObra = (type, obra, value) => {
 
     let query = '';
-    
+
     switch (parseInt(type)) {
         case 1:
             query = `UPDATE OBRAS SET NOMBRE = '${value}' WHERE ID_OBRA = ${obra}`;
@@ -110,11 +110,13 @@ exports.devolverQueryEditObra = (type, obra, value) => {
 }
 
 
+
+
 //Devuelve una query dependiento al valor de la variable Type
 exports.devolverQueryEditChapter = (type, id, value) => {
 
     let query = '';
-    
+
     switch (parseInt(type)) {
         case 1:
             query = `UPDATE CAPITULOS SET NUMERO = ${value} WHERE ID_CAPITULO = ${id}`;
@@ -139,6 +141,123 @@ exports.devolverQueryEditChapter = (type, id, value) => {
     return query;
 }
 
+
+//Devuelve una query dependiento al valor de la variable Type
+exports.devolverQueryCheckUsername = (type,value) => {
+
+    let query = '';
+
+    console.log(type);
+    
+
+    switch (type) {
+        case 'EDITOR':
+            query = `SELECT 
+            CASE WHEN EXISTS 
+              (SELECT  E.ID_EDITOR
+              FROM EDITORES E 
+              WHERE E.USERNAME LIKE '${value}')
+            THEN 1 
+            ELSE 0 
+            END AS booleano`;
+            break;
+
+        case 'READER':
+            query = `SELECT 
+            CASE WHEN EXISTS 
+              (SELECT  U.ID_USUARIO
+              FROM USUARIOS U  
+              WHERE U.USERNAME LIKE '${value}')
+            THEN 1 
+            ELSE 0 
+            END AS booleano`;
+            break;
+
+        default:
+            break;
+    }
+
+    return query;
+}
+
+
+//Devuelve una query dependiento al valor de la variable Type
+exports.devolverQueryCheckEmail = (type,value) => {
+
+    let query = '';
+
+    switch (type) {
+        case 'EDITOR':
+            query = `SELECT 
+            CASE WHEN EXISTS 
+              (SELECT  E.ID_EDITOR
+              FROM EDITORES E 
+              WHERE E.EMAIL LIKE '${value}')
+            THEN 1 
+            ELSE 0 
+            END AS booleano`;
+            break;
+
+        case 'READER':
+            query = `SELECT 
+            CASE WHEN EXISTS 
+              (SELECT  U.ID_USUARIO
+              FROM USUARIOS U  
+              WHERE U.EMAIL LIKE '${value}')
+            THEN 1 
+            ELSE 0 
+            END AS booleano`;
+            break;
+
+        default:
+            break;
+    }
+
+    return query;
+}
+
+
+//Devuelve una query dependiento al valor de la variable Type
+exports.devolverQueryEditUsername = (type, id, value) => {
+
+    let query = '';
+
+    switch (type) {
+        case 'READER':
+            query = `UPDATE USUARIOS SET USERNAME = '${value}' WHERE ID_USUARIO = ${id}`;
+            break;
+
+        case 'EDITOR':
+            query = `UPDATE EDITORES SET USERNAME = '${value}' WHERE ID_EDITOR = ${id}`;
+            break;
+
+        default:
+            break;
+    }
+
+    return query;
+}
+
+//Devuelve una query dependiento al valor de la variable Type
+exports.devolverQueryEditEmail = (type, id, value) => {
+
+    let query = '';
+
+    switch (type) {
+        case 'READER':
+            query = `UPDATE USUARIOS SET EMAIL = '${value}' WHERE ID_USUARIO = ${id}`;
+            break;
+
+        case 'EDITOR':
+            query = `UPDATE EDITORES SET EMAIL = '${value}' WHERE ID_EDITOR = ${id}`;
+            break;
+
+        default:
+            break;
+    }
+
+    return query;
+}
 
 //Devuelve una query dependiento al valor de la variable Type
 exports.devolverQueryGenerateToken = (type, user, password) => {

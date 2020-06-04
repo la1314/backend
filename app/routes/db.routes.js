@@ -17,14 +17,42 @@ module.exports = (app) => {
     //Comprueba que el usuario ingresado existe -> user, type
     app.post('/api/check-user/', dbU.checkUser);
 
-    //Comprueba que el usuario ingresado existe -> user, type
-    app.post('/api/check-user/', withAuth, dbU.findUserDetails);
-    //Comprueba que el usuario ingresado existe -> user, type
-    app.post('/api/check-user/', withAuth, dbU.checkUserPassword);
-    //Comprueba que el usuario ingresado existe -> user, type
-    app.post('/api/check-user/', withAuth, dbU.findEditorDetails);    
-    //Comprueba que el usuario ingresado existe -> user, type
-    app.post('/api/check-user/', withAuth, dbU.checkEditorPassword);
+
+
+    //Comprueba que el email ingresado existe -> username
+    app.post('/api/check-username/', withAuth, dbU.checkUsername);
+
+    //Comprueba que el email ingresado existe -> email 
+    app.post('/api/check-email/', withAuth, dbU.checkEmail);
+
+
+    //Edita el username ingresado
+    app.post('/api/edit-username/', withAuth, dbU.editUsername);
+
+    //Edita el email ingresado
+    app.post('/api/edit-email/', withAuth, dbU.editEmail);
+
+    //Edita el phone ingresado
+    app.post('/api/edit-phone/', withAuth, dbU.editPhone);
+
+
+    //Devuelve los datos del usuario actual
+    app.post('/api/find-user-details/', withAuth, dbU.findUserDetails);
+
+    //Comprueba la contraseña del usuario actual
+    app.post('/api/check-user-password/', withAuth, dbU.checkUserPassword);
+
+    //Edita la contraseña del usuario actual
+    app.post('/api/edit-user-password/', withAuth, dbU.editUserPassword);
+
+    //Devuelve los datos del editor actual
+    app.post('/api/find-editor-details/', withAuth, dbU.findEditorDetails);
+
+    //Comprueba la contraseña del editor actual
+    app.post('/api/check-editor-password/', withAuth, dbU.checkEditorPassword);
+
+    //Edita la contraseña del Editor actual
+    app.post('/api/edit-editor-password/', withAuth, dbU.editEditorPassword);
 
 
     /** Obras **/
