@@ -17,14 +17,11 @@ module.exports = (app) => {
     //Comprueba que el usuario ingresado existe -> user, type
     app.post('/api/check-user/', dbU.checkUser);
 
-
-
     //Comprueba que el email ingresado existe -> username
     app.post('/api/check-username/', withAuth, dbU.checkUsername);
 
     //Comprueba que el email ingresado existe -> email 
     app.post('/api/check-email/', withAuth, dbU.checkEmail);
-
 
     //Edita el username ingresado
     app.post('/api/edit-username/', withAuth, dbU.editUsername);
@@ -34,7 +31,6 @@ module.exports = (app) => {
 
     //Edita el phone ingresado
     app.post('/api/edit-phone/', withAuth, dbU.editPhone);
-
 
     //Devuelve los datos del usuario actual
     app.post('/api/find-user-details/', withAuth, dbU.findUserDetails);
@@ -53,6 +49,16 @@ module.exports = (app) => {
 
     //Edita la contraseña del Editor actual
     app.post('/api/edit-editor-password/', withAuth, dbU.editEditorPassword);
+
+    //Edita el phone ingresado -> tipo (id tipo)
+    app.post('/api/check-reader/', withAuth, dbU.checkReader);
+
+    //Edita el phone ingresado -> tipo (id tipo)
+    app.post('/api/create-reader/', withAuth, dbU.createReader);
+
+    //Edita el phone ingresado -> tipo (id tipo)
+    app.post('/api/find-lectores/', withAuth, dbU.findLectores);
+
 
 
     /** Obras **/

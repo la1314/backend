@@ -158,11 +158,6 @@ exports.findLeidos = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.findRecientes = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const query = `SELECT O.NOMBRE, C.ID_OBRA AS OBRA, DATE_FORMAT(C.FECHA, "%d-%m-%Y") AS FECHA, O.COVER, T.NOMBRE AS TIPO 
                   FROM CAPITULOS C 
                   INNER JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA 
@@ -184,11 +179,6 @@ exports.findRecientes = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.findUserDetails = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const user = parseInt(req.user);
 
   const query = `SELECT EMAIL, USERNAME FROM USUARIOS WHERE ID_USUARIO = ${user}`;
@@ -207,13 +197,8 @@ exports.findUserDetails = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.checkUserPassword = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const user = parseInt(req.user);
-  const {password} = req.query;
+  const { password } = req.query;
 
   const query = `SELECT (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano
   FROM USUARIOS 
@@ -233,15 +218,11 @@ exports.checkUserPassword = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.editUserPassword = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
 
   const user = parseInt(req.user);
-  const {password} = req.query;
+  const { password } = req.query;
 
-  const query =`UPDATE USUARIOS SET PASSWORD = '${password}' WHERE ID_USUARIO = ${user}`;
+  const query = `UPDATE USUARIOS SET PASSWORD = '${password}' WHERE ID_USUARIO = ${user}`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -256,11 +237,6 @@ exports.editUserPassword = (req, res) => {
 
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.findEditorDetails = (req, res) => {
-
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
 
   const user = parseInt(req.user);
 
@@ -280,12 +256,8 @@ exports.findEditorDetails = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.checkEditorPassword = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
   const user = parseInt(req.user);
-  const {password} = req.query;
+  const { password } = req.query;
 
   const query = `SELECT (CASE WHEN PASSWORD LIKE '${password}' THEN 1 ELSE 0 END) AS booleano
   FROM EDITORES 
@@ -305,15 +277,10 @@ exports.checkEditorPassword = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.editEditorPassword = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const user = parseInt(req.user);
-  const {password} = req.query;
+  const { password } = req.query;
 
-  const query =`UPDATE EDITORES SET PASSWORD = '${password}' WHERE ID_EDITOR = ${user}`;
+  const query = `UPDATE EDITORES SET PASSWORD = '${password}' WHERE ID_EDITOR = ${user}`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -329,13 +296,8 @@ exports.editEditorPassword = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.checkUsername = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const rol = req.rol
-  const {username} = req.query;
+  const { username } = req.query;
 
   const query = toolF.devolverQueryCheckUsername(rol, username);
 
@@ -353,13 +315,8 @@ exports.checkUsername = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.checkEmail = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const rol = req.rol
-  const {email} = req.query;
+  const { email } = req.query;
 
   const query = toolF.devolverQueryCheckEmail(rol, email);
 
@@ -377,14 +334,9 @@ exports.checkEmail = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.editUsername = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const user = parseInt(req.user);
   const rol = req.rol
-  const {email} = req.query;
+  const { email } = req.query;
 
   const query = toolF.devolverQueryEditUsername(rol, user, email);
 
@@ -402,14 +354,9 @@ exports.editUsername = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.editEmail = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * ID de los capítulos leidos
-   */
-
   const user = parseInt(req.user);
   const rol = req.rol
-  const {email} = req.query;
+  const { email } = req.query;
 
   const query = toolF.devolverQueryEditEmail(rol, user, email);
 
@@ -433,9 +380,76 @@ exports.editPhone = (req, res) => {
    */
 
   const user = parseInt(req.user);
-  const {phone} = req.query;
+  const { phone } = req.query;
 
   const query = `UPDATE EDITORES SET PHONE = ${phone} WHERE ID_EDITOR = ${user}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Se comprueba si el usuario tiene un reader
+exports.checkReader = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { tipo } = req.query;
+
+  const query = `SELECT 
+  CASE WHEN EXISTS 
+    (SELECT  R.ID_USUARIO
+    FROM READER R 
+    WHERE R.ID_USUARIO = ${user} AND R.ID_TIPO = ${tipo})
+  THEN 1 
+  ELSE 0 
+  END AS booleano`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Se comprueba si el usuario tiene un reader
+exports.createReader = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { tipo } = req.query;
+
+  const query = `INSERT INTO READER (ID_USUARIO, ID_TIPO)
+  VALUES (${user}, ${tipo})`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Se comprueba si el usuario tiene un reader
+exports.findLectores = (req, res) => {
+
+  const user = parseInt(req.user);
+
+  const query = `SELECT T.NOMBRE, R.ID_TIPO AS ID, CASCADA, PAGINADA, OCCIDENTAL, ORIENTAL
+                FROM READER R
+                INNER JOIN TIPO T ON T.ID_TIPO = R.ID_TIPO
+                WHERE ID_USUARIO = ${user}`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {

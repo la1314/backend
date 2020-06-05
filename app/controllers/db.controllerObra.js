@@ -240,7 +240,7 @@ exports.getDemografia = (req, res) => {
 //Devuelve los tipos de obras que pueden haber
 exports.findTipos = (req, res) => {
 
-  const query = `SELECT ID_TIPO AS ID, NOMBRE FROM TIPO`;
+  const query = `SELECT ID_TIPO AS ID, NOMBRE FROM TIPO ORDER BY NOMBRE`;
 
   // if there is no error, you have the result
   poolObra.query(query, (err, result) => {
