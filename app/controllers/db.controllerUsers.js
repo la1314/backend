@@ -461,3 +461,65 @@ exports.findLectores = (req, res) => {
     res.send(result);
   });
 }
+
+// Actualiza los valores de las columnas CASCADA y PAGINADA
+exports.updateReaderPC = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { tipo, cascada, paginada } = req.query
+
+  const query = `UPDATE READER SET CASCADA = ${cascada}, PAGINADA = ${paginada}
+                 WHERE ID_USUARIO = ${user} AND ID_TIPO = ${tipo} `;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Actualiza los valores de las columnas ORIENTAL y OCCIDENTAL
+exports.updateReaderOROC = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { tipo, occidental, oriental } = req.query
+
+  const query = `UPDATE READER SET ORIENTAL = ${oriental}, OCCIDENTAL = ${occidental}
+                 WHERE ID_USUARIO = ${user} AND ID_TIPO = ${tipo} `;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene la configuración de un lector de un cierto tipo
+exports.findLectorTipo = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { tipo } = req.query
+
+  const query = `SELECT CASCADA, PAGINADA, OCCIDENTAL, ORIENTAL
+  FROM READER R
+  INNER JOIN TIPO T ON T.ID_TIPO = R.ID_TIPO
+  WHERE R.ID_USUARIO = ${user} AND R.ID_TIPO = ${tipo}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}

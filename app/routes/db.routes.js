@@ -59,6 +59,15 @@ module.exports = (app) => {
     //Edita el phone ingresado -> tipo (id tipo)
     app.post('/api/find-lectores/', withAuth, dbU.findLectores);
 
+    // Actualiza los valores de las columnas CASCADA y PAGINADA
+    app.post('/api/update-reader-pc/', withAuth, dbU.updateReaderPC);
+
+    // Actualiza los valores de las columnas ORIENTAL y OCCIDENTAL
+    app.post('/api/update-reader-oroc/', withAuth, dbU.updateReaderOROC);
+
+    // Obtiene la configuración de un lector de un cierto tipo
+    app.post('/api/find-lector-tipo/', withAuth, dbU.findLectorTipo);
+
 
 
     /** Obras **/
