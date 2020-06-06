@@ -76,28 +76,6 @@ exports.findInfoObra = (req, res) => {
 };
 
 
-// Obtiene la media de una obra
-exports.findAvgObra = (req, res) => {
-
-  //La query devolverá los siguientes datos:
-  /**
-   * Media de todos los puntajes de una Obra
-   */
-
-  const { id: obra } = req.query
-  const query = `SELECT AVG(PUNTOS) FROM PUNTUAN WHERE ID_OBRA = ${obra}`;
-
-  // if there is no error, you have the result
-  poolObra.query(query, (err, result) => {
-
-    // if any error while executing above query, throw error
-    if (err) throw new Error(err)
-
-    // if there is no error, you have the result
-    res.send(result);
-  });
-};
-
 // Obtiene el ID y el Nombre de cada una de las obras de un editor
 exports.findAllEditorObras = (req, res) => {
 
@@ -440,7 +418,6 @@ exports.findCover = (req, res) => {
 };
 
 // Devuelve la visibilidad de una obra o capítulo
-//TODO CAPITULO
 exports.findVisibilidad = (req, res) => {
 
   //La query devolverá los siguientes datos:
@@ -494,5 +471,107 @@ exports.getTipo = (req, res) => {
 
     // if there is no error, you have the result
     res.send(result);
+  });
+};
+
+
+//Crea una puntuación
+exports.newUserVote = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { obra, puntos } = req.query
+  const query = `INSERT INTO PUNTUAN (ID_USUARIO, ID_OBRA, PUNTOS) VALUES (${user}, ${obra}, ${puntos})`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+};
+
+//Actualiza una puntuación
+exports.updateUserVote = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { obra, puntos } = req.query
+  const query = `UPDATE PUNTUAN SET PUNTOS = ${puntos} WHERE ID_OBRA = ${obra} AND ID_USUARIO = ${user}`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+};
+
+//Comprueba si el lector ha votado
+exports.checkUserVote = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { obra } = req.query
+  const query = `SELECT 
+  CASE WHEN EXISTS 
+    (SELECT  *
+    FROM PUNTUAN
+    WHERE ID_OBRA = ${obra} AND ID_USUARIO = ${user})
+  THEN 1 
+  ELSE 0 
+  END AS booleano`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+};
+
+//Recupera la puntuación del lector
+exports.findUserVote = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { obra } = req.query
+  const query = `SELECT PUNTOS FROM PUNTUAN WHERE ID_USUARIO = ${user} AND ID_OBRA = ${obra}`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+};
+
+// Obtiene la media de una obra
+exports.findAvgObra = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * Media de todos los puntajes de una Obra
+   */
+
+  const { obra } = req.query
+  const query = `SELECT AVG(PUNTOS) AS MEDIA FROM PUNTUAN WHERE ID_OBRA = ${obra}`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result[0]);
   });
 };

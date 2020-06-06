@@ -94,10 +94,6 @@ module.exports = (app) => {
     // Actualiza el link de la social media de una obra
     app.post('/api/update-social-media/', withAuth, dbO.updateSocialMedia);
 
-
-    // Obtiene la media de una obra -> id
-    app.post('/api/find-avg-obra/', dbO.findAvgObra);
-
     // Obtiene los estados
     app.post('/api/find-estados/', dbO.findEstados);
 
@@ -139,7 +135,22 @@ module.exports = (app) => {
 
     // Edita los parámetros de una obra -> type (int), obra (id obra), value (Valor nuevo)
     // Type: 1:NOMBRE, 2:AUTOR, 3:LANZAMIENTO, 4: DESCRIPTION, 5:COVER
-    app.post('/api/edit-obra/', dbO.editObra);
+    app.post('/api/edit-obra/', withAuth, dbO.editObra);
+
+    // Recupera la puntuación del lector -> obra
+    app.post('/api/new-user-vote/', withAuth, dbO.newUserVote);
+
+    //Comprueba si el lector ha votado
+    app.post('/api/update-user-vote/', withAuth, dbO.updateUserVote);
+
+    // Recupera la puntuación del lector -> obra
+    app.post('/api/find-user-vote/', withAuth, dbO.findUserVote);
+
+    //Comprueba si el lector ha votado
+    app.post('/api/check-user-vote/', withAuth, dbO.checkUserVote);
+
+    // Obtiene la media de una obra -> id
+    app.post('/api/find-avg-obra/', withAuth, dbO.findAvgObra);
 
 
     /** Capítulos y paginas **/
@@ -219,6 +230,4 @@ module.exports = (app) => {
     //Obtiene las últimas 25 obras que han subido un nuevo capítulo
     app.post('/api/find-recientes/', withAuth, dbU.findRecientes);
 }
-
-
 
