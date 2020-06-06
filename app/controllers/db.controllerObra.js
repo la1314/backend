@@ -147,11 +147,6 @@ exports.editObra = (req, res) => {
 //Añade la demografia por defecto
 exports.defaultDemografia = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   * Edita la demografia de una obra
-   */
-
   const { obra } = req.query
 
   const query = `INSERT INTO SEGMENTADOS (ID_OBRA, ID_DEMOGRAFIA) VALUES (${obra}, 16)`;
@@ -307,10 +302,65 @@ exports.findGenerosActuales = (req, res) => {
   });
 }
 
+
+//Añade una media a una obra
+exports.newSocialMedia = (req, res) => {
+
+  const { obra, media } = req.query
+
+  const query = `INSERT INTO TIENEN (ID_OBRA, ID_SOCIAL) VALUES (${obra}, ${media})`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+};
+
+//Elimina una media de una obra
+exports.deleteSocialMedia = (req, res) => {
+
+  const { obra, media } = req.query
+
+  const query = `DELETE FROM TIENEN WHERE ID_OBRA = ${obra} AND ID_SOCIAL = ${media}`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+};
+
+//Añade una media a una obra
+exports.updateSocialMedia = (req, res) => {
+
+  const { obra, media, link } = req.query
+
+  const query = `UPDATE TIENEN SET LINK = '${link}' WHERE ID_OBRA = ${obra} AND ID_SOCIAL = ${media}`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+};
+
 //Devuelve los generos que puede tener una obra
 exports.findAllSocialMedia = (req, res) => {
 
-  const query = `SELECT ID_SOCIAL AS ID, NOMBRE FROM SOCIAL_MEDIA`;
+  const query = `SELECT ID_SOCIAL AS ID, NOMBRE, LOGO FROM SOCIAL_MEDIA`;
 
   // if there is no error, you have the result
   poolObra.query(query, (err, result) => {
@@ -332,8 +382,8 @@ exports.findSocialMedia = (req, res) => {
    * Link
    */
 
-  const { id: obra } = req.query
-  const query = `SELECT S.NOMBRE, T.LINK FROM TIENEN T INNER JOIN SOCIAL_MEDIA S ON T.ID_SOCIAL = S.ID_SOCIAL INNER JOIN OBRAS O ON T.ID_OBRA = O.ID_OBRA WHERE O.ID_OBRA = ${obra}`;
+  const { obra } = req.query
+  const query = `SELECT S.ID_SOCIAL AS ID, S.NOMBRE, S.LOGO, T.LINK FROM TIENEN T INNER JOIN SOCIAL_MEDIA S ON T.ID_SOCIAL = S.ID_SOCIAL INNER JOIN OBRAS O ON T.ID_OBRA = O.ID_OBRA WHERE O.ID_OBRA = ${obra}`;
 
   // if there is no error, you have the result
   poolObra.query(query, (err, result) => {
@@ -346,13 +396,34 @@ exports.findSocialMedia = (req, res) => {
   });
 };
 
+
+// Comprueba que la obra tenga creada la social media
+exports.checkSocialMedia = (req, res) => {
+
+  const { obra, media } = req.query
+  const query = `SELECT 
+  CASE WHEN EXISTS 
+    (SELECT  *
+    FROM TIENEN
+    WHERE ID_OBRA = ${obra} AND ID_SOCIAL = ${media})
+  THEN 1 
+  ELSE 0 
+  END AS booleano`;
+
+  // if there is no error, you have the result
+  poolObra.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+};
+
+
 // Devuelve el cover de una obra
 exports.findCover = (req, res) => {
-
-  //La query devolverá los siguientes datos:
-  /**
-   * Devuelve la ruta del cover de la obra actual
-   */
 
   const { obra } = req.query
   const query = `SELECT COVER FROM OBRAS WHERE ID_OBRA = ${obra}`;
@@ -394,11 +465,6 @@ exports.findVisibilidad = (req, res) => {
 //Devuelve el nombre de un estado
 exports.getEstado = (req, res) => {
 
-  //La query devolverá los siguientes datos:
-  /**
-   *NOMBRE
-   */
-
   const { id } = req.query
   const query = `SELECT NOMBRE FROM ESTADOS WHERE ID_ESTADO = ${id}`;
 
@@ -417,10 +483,6 @@ exports.getEstado = (req, res) => {
 exports.getTipo = (req, res) => {
 
   //La query devolverá los siguientes datos:
-  /**
-   *NOMBRE
-   */
-
   const { id } = req.query
   const query = `SELECT NOMBRE FROM TIPO WHERE ID_TIPO = ${id}`;
 
@@ -434,11 +496,3 @@ exports.getTipo = (req, res) => {
     res.send(result);
   });
 };
-
-
-
-
-
-/**
- * CASE VISIBILIDAD WHEN 0 THEN 'OCULTO' ELSE 'VISIBLE' END AS VISIBILIDAD
- */

@@ -69,7 +69,6 @@ module.exports = (app) => {
     app.post('/api/find-lector-tipo/', withAuth, dbU.findLectorTipo);
 
 
-
     /** Obras **/
     // Añade una obra nueva -> editor, name, autor, lanzamiento, estado, tipo, visibilidad
     app.post('/api/new-obra/', dbO.newObra);
@@ -80,8 +79,21 @@ module.exports = (app) => {
     // Obtiene datos para la página de la obra -> obra (id obra)
     app.post('/api/find-info-obra/', dbO.findInfoObra);
 
+    // Obtiene los nombres y links de las redes sociales de una obra -> obra, media
+    app.post('/api/new-social-media/', withAuth, dbO.newSocialMedia);
+
+    // Obtiene los nombres y links de las redes sociales de una obra -> obra, media
+    app.post('/api/delete-social-media/', withAuth, dbO.deleteSocialMedia);
+
     // Obtiene los nombres y links de las redes sociales de una obra -> id
-    app.post('/api/find-social-media/', dbO.findSocialMedia);
+    app.post('/api/find-social-media/', withAuth, dbO.findSocialMedia);
+
+    // Comprueba que la obra tenga creada la social media
+    app.post('/api/check-social-media/', withAuth, dbO.checkSocialMedia);
+
+    // Actualiza el link de la social media de una obra
+    app.post('/api/update-social-media/', withAuth, dbO.updateSocialMedia);
+
 
     // Obtiene la media de una obra -> id
     app.post('/api/find-avg-obra/', dbO.findAvgObra);
@@ -191,15 +203,22 @@ module.exports = (app) => {
 
     /** Vista del Lector **/
 
-    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> id(id obra), user(id user)
-    app.post('/api/find-follow/', dbU.findFollow);
+    // añade una obra a las seguidas por el usuario -> obra
+    app.post('/api/follow-obra/', withAuth, dbU.followObra);
+
+    // elimina una obra de las seguidas por el usuario -> obra
+    app.post('/api/unfollow-obra/', withAuth, dbU.unfollowObra);
+
+    // Comprueba si un usuario sigue una obra (Devuevle el ROW 'Booleano') -> obra
+    app.post('/api/find-follow/', withAuth, dbU.findFollow);
 
     // Obtiene los capítulos que ha leido un usuario en una determinada Obra
     //ID & USER
-    app.post('/api/find-leidos/', dbU.findLeidos);
+    app.post('/api/find-leidos/', withAuth, dbU.findLeidos);
 
     //Obtiene las últimas 25 obras que han subido un nuevo capítulo
-    app.post('/api/find-recientes/', dbU.findRecientes);
+    app.post('/api/find-recientes/', withAuth, dbU.findRecientes);
 }
+
 
 

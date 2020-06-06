@@ -103,14 +103,63 @@ exports.generateToken = (req, res) => {
 /** Querys realacionadas a Vista del Lector **/
 
 // Obtiene un Valor Booleano para saber si un Usuario sigue o no una Obra
+exports.followObra = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * Valor Booleano 0 False - 1 True
+   */
+  const user = parseInt(req.user);
+  const { obra } = req.query
+
+  const query = `INSERT INTO SIGUEN (ID_USUARIO, ID_OBRA)
+  VALUES (${user}, ${obra})`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+
+  });
+}
+
+// Obtiene un Valor Booleano para saber si un Usuario sigue o no una Obra
+exports.unfollowObra = (req, res) => {
+
+  //La query devolverá los siguientes datos:
+  /**
+   * Valor Booleano 0 False - 1 True
+   */
+  const user = parseInt(req.user);
+  const { obra } = req.query
+
+  const query = `DELETE FROM SIGUEN WHERE ID_USUARIO = ${user} AND ID_OBRA = ${obra}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+
+  });
+}
+
+// Obtiene un Valor Booleano para saber si un Usuario sigue o no una Obra
 exports.findFollow = (req, res) => {
 
   //La query devolverá los siguientes datos:
   /**
    * Valor Booleano 0 False - 1 True
    */
-
-  const { id: obra, user } = req.query
+  const user = parseInt(req.user);
+  const { obra } = req.query
 
   const query = `SELECT CASE WHEN EXISTS (SELECT * FROM SIGUEN AS S 
                   WHERE S.ID_OBRA = ${obra} AND S.ID_USUARIO = ${user})
@@ -123,7 +172,7 @@ exports.findFollow = (req, res) => {
     if (err) throw new Error(err)
 
     // if there is no error, you have the result
-    res.send(result);
+    res.send(result[0]);
 
   });
 }
@@ -195,6 +244,24 @@ exports.findUserDetails = (req, res) => {
 }
 
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
+exports.findEditorDetails = (req, res) => {
+
+  const user = parseInt(req.user);
+
+  const query = `SELECT EMAIL, USERNAME, PHONE FROM EDITORES WHERE ID_EDITOR = ${user}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+}
+
+// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.checkUserPassword = (req, res) => {
 
   const user = parseInt(req.user);
@@ -218,29 +285,10 @@ exports.checkUserPassword = (req, res) => {
 // Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
 exports.editUserPassword = (req, res) => {
 
-
   const user = parseInt(req.user);
   const { password } = req.query;
 
   const query = `UPDATE USUARIOS SET PASSWORD = '${password}' WHERE ID_USUARIO = ${user}`;
-
-  // if there is no error, you have the result
-  pool.query(query, (err, result) => {
-
-    // if any error while executing above query, throw error
-    if (err) throw new Error(err)
-
-    // if there is no error, you have the result
-    res.send(result);
-  });
-}
-
-// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
-exports.findEditorDetails = (req, res) => {
-
-  const user = parseInt(req.user);
-
-  const query = `SELECT EMAIL, USERNAME, PHONE FROM EDITORES WHERE ID_EDITOR = ${user}`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -336,9 +384,9 @@ exports.editUsername = (req, res) => {
 
   const user = parseInt(req.user);
   const rol = req.rol
-  const { email } = req.query;
+  const { username } = req.query;
 
-  const query = toolF.devolverQueryEditUsername(rol, user, email);
+  const query = toolF.devolverQueryEditUsername(rol, user, username);
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
