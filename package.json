@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "client": "yarn start",
+    "client": "cd .. && cd mcnreader && yarn start",
     "server": "nodemon app.js",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
