@@ -283,19 +283,12 @@ exports.findRecientes = (req, res) => {
   });
 }
 
+// Buscar las 10 Obras con mejor media
+exports.findTop10 = (req, res) => {
 
-// Obtiene las Obras con capítulos no leidos
-exports.getNoLeidos = (req, res) => {
-
-  const user = parseInt(req.user);
-
-  const query = `SELECT C.ID_OBRA AS OBRA, COUNT(C.ID_CAPITULO) AS TOTALCAPS, COUNT(L.ID_CAPITULO) AS LEIDOS, O.NOMBRE, O.COVER
-  FROM CAPITULOS C
-  LEFT JOIN SIGUEN S ON S.ID_OBRA = C.ID_OBRA
-  LEFT JOIN LEEN L ON L.ID_CAPITULO = C.ID_CAPITULO
-  LEFT JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA
-  WHERE S.ID_USUARIO = ${user}
-  GROUP BY OBRA`;
+  const query = `SELECT P.ID_OBRA AS ID, AVG(P.PUNTOS) AS MEDIA, O.NOMBRE, O.COVER FROM PUNTUAN P 
+                  INNER JOIN OBRAS O ON O.ID_OBRA = P.ID_OBRA 
+                  GROUP BY ID ORDER BY MEDIA DESC LIMIT 10`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -306,6 +299,27 @@ exports.getNoLeidos = (req, res) => {
   });
 }
 
+// Obtiene las Obras con capítulos no leidos
+exports.getNoLeidos = (req, res) => {
+
+  const user = parseInt(req.user);
+
+  const query = `SELECT C.ID_OBRA AS ID, COUNT(C.ID_CAPITULO) AS TOTALCAPS, COUNT(L.ID_CAPITULO) AS LEIDOS, O.NOMBRE, O.COVER
+  FROM CAPITULOS C
+  LEFT JOIN SIGUEN S ON S.ID_OBRA = C.ID_OBRA
+  LEFT JOIN LEEN L ON L.ID_CAPITULO = C.ID_CAPITULO
+  LEFT JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA
+  WHERE S.ID_USUARIO = ${user}
+  GROUP BY ID`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
 
 // Obtiene los datos de las obras seguidas por el usuario
 exports.getListFollow = (req, res) => {
@@ -667,3 +681,46 @@ exports.findLectorTipo = (req, res) => {
     res.send(result);
   });
 }
+
+
+/** Consultar de la Biblioteca **/
+
+// Obtiene las iniciales de las obras
+exports.findFirstLetra = (req, res) => {
+
+  const query = `SELECT DISTINCT LEFT(O.NOMBRE, 1) AS LETRA FROM OBRAS O ORDER BY O.NOMBRE`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene una lista de obras a traves de una letra
+exports.findObraByLetra = (req, res) => {
+
+  const { letra } = req.query
+
+  const query = `SELECT O.ID_OBRA AS ID, O.NOMBRE, O.COVER , T.NOMBRE AS TIPO FROM OBRAS O 
+  INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
+  WHERE O.NOMBRE LIKE '${letra}%'
+  ORDER BY O.NOMBRE`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+
+

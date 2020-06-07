@@ -230,6 +230,9 @@ module.exports = (app) => {
     //Obtiene las últimas 25 obras que han subido un nuevo capítulo
     app.post('/api/find-recientes/', withAuth, dbU.findRecientes);
 
+     // Buscar las 10 Obras con mejor media
+     app.post('/api/find-top-10/', withAuth, dbU.findTop10);
+
     //Obtiene la lista de obras seguidas por el usuario
     app.post('/api/get-list-follow/', withAuth, dbU.getListFollow);
 
@@ -245,5 +248,11 @@ module.exports = (app) => {
 
     // Elimina de leidos un capítulo
     app.post('/api/delete-leido/', withAuth, dbU.deleteLeido);
+
+    // Obtiene las iniciales de las obras
+    app.post('/api/find-first-letra/', withAuth, dbU.findFirstLetra);
+
+    // Obtiene una lista de obras a traves de una letra
+    app.post('/api/find-by-letra/', withAuth, dbU.findObraByLetra);
 
 }
