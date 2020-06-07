@@ -234,6 +234,8 @@ module.exports = (app) => {
     app.post('/api/get-list-follow/', withAuth, dbU.getListFollow);
 
     //Obitne la lista de capitulos pendientes del usuario
+    //Obtiene la lista de obras seguidas por el usuario
+    app.post('/api/get-no-leidos/', withAuth, dbU.getNoLeidos);
 
     //Comprueba si el capítulo ha sido leido por el usuario
     app.post('/api/check-leido/', withAuth, dbU.checkLeido);
