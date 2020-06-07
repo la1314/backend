@@ -286,8 +286,10 @@ exports.findRecientes = (req, res) => {
 // Buscar las 10 Obras con mejor media
 exports.findTop10 = (req, res) => {
 
-  const query = `SELECT P.ID_OBRA AS ID, AVG(P.PUNTOS) AS MEDIA, O.NOMBRE, O.COVER FROM PUNTUAN P 
-                  INNER JOIN OBRAS O ON O.ID_OBRA = P.ID_OBRA 
+  const query = `SELECT P.ID_OBRA AS ID, AVG(P.PUNTOS) AS MEDIA, O.NOMBRE, O.COVER, T.NOMBRE AS TIPO 
+                  FROM PUNTUAN P 
+                  INNER JOIN OBRAS O ON O.ID_OBRA = P.ID_OBRA
+                  INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
                   GROUP BY ID ORDER BY MEDIA DESC LIMIT 10`;
 
   // if there is no error, you have the result
