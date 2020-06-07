@@ -229,5 +229,19 @@ module.exports = (app) => {
 
     //Obtiene las últimas 25 obras que han subido un nuevo capítulo
     app.post('/api/find-recientes/', withAuth, dbU.findRecientes);
-}
 
+    //Obtiene la lista de obras seguidas por el usuario
+    app.post('/api/get-list-follow/', withAuth, dbU.getListFollow);
+
+    //Obitne la lista de capitulos pendientes del usuario
+
+    //Comprueba si el capítulo ha sido leido por el usuario
+    app.post('/api/check-leido/', withAuth, dbU.checkLeido);
+
+    // Crea un capítulo leido
+    app.post('/api/new-leido/', withAuth, dbU.newLeido);
+
+    // Elimina de leidos un capítulo
+    app.post('/api/delete-leido/', withAuth, dbU.deleteLeido);
+
+}

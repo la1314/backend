@@ -90,7 +90,7 @@ exports.findChapters = (req, res) => {
 
   const { obra } = req.query;
 
-  const query = `SELECT L.ID_CAPITULO AS ID, L.NUMERO, L.NOMBRE FROM CAPITULOS L WHERE L.ID_OBRA = ${obra} ORDER BY L.NUMERO`;
+  const query = `SELECT L.ID_CAPITULO AS ID, L.NUMERO, L.NOMBRE FROM CAPITULOS L WHERE L.ID_OBRA = ${obra} ORDER BY L.NUMERO DESC`;
 
   // if there is no error, you have the result
   poolChapter.query(query, (err, result) => {

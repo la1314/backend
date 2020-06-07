@@ -204,15 +204,20 @@ exports.findLeidos = (req, res) => {
   });
 }
 
-// Obtiene los Capítulos que han sido leidos por un Usario en una determinada Obra
-exports.findRecientes = (req, res) => {
+//Comprueba si el capítulo ha sido leido por el usuario
+exports.checkLeido = (req, res) => {
 
-  const query = `SELECT O.NOMBRE, C.ID_OBRA AS OBRA, DATE_FORMAT(C.FECHA, "%d-%m-%Y") AS FECHA, O.COVER, T.NOMBRE AS TIPO 
-                  FROM CAPITULOS C 
-                  INNER JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA 
-                  INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
-                  WHERE C.VISIBILIDAD = 1 AND O.VISIBILIDAD = 1
-                  GROUP BY OBRA ORDER BY C.FECHA DESC LIMIT 25`;
+  const user = parseInt(req.user);
+  const { chapter } = req.query;
+
+  const query = `SELECT 
+  CASE WHEN EXISTS 
+    (SELECT  L.ID_CAPITULO
+    FROM LEEN L 
+    WHERE L.ID_USUARIO = ${user} AND L.ID_CAPITULO = ${chapter})
+  THEN 1 
+  ELSE 0 
+  END AS Booleano`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -220,6 +225,79 @@ exports.findRecientes = (req, res) => {
     // if any error while executing above query, throw error
     if (err) throw new Error(err)
 
+    // if there is no error, you have the result
+    res.send(result[0]);
+  });
+}
+
+// Crea un capítulo leido
+exports.newLeido = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { chapter } = req.query;
+  const query = `INSERT INTO LEEN (ID_USUARIO, ID_CAPITULO) VALUES (${user}, ${chapter})`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Elimina de leidos un capítulo
+exports.deleteLeido = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { chapter } = req.query;
+  const query = `DELETE FROM LEEN WHERE ID_USUARIO = ${user} AND ID_CAPITULO = ${chapter}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene los 25 últimos capítulos subidos
+exports.findRecientes = (req, res) => {
+
+  const query = `SELECT O.NOMBRE, C.ID_OBRA AS OBRA, DATE_FORMAT(C.FECHA, "%d-%m-%Y") AS FECHA, O.COVER, T.NOMBRE AS TIPO 
+                  FROM CAPITULOS C 
+                  INNER JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA 
+                  INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
+                  WHERE C.VISIBILIDAD = 1 AND O.VISIBILIDAD = 1
+                  GROUP BY OBRA ORDER BY C.FECHA DESC LIMIT 28`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene los datos de las obras seguidas por el usuario
+exports.getListFollow = (req, res) => {
+
+  const user = parseInt(req.user);
+
+  const query = `SELECT S.ID_OBRA AS ID, O.NOMBRE, O.COVER
+                FROM SIGUEN S
+                INNER JOIN OBRAS O ON O.ID_OBRA = S.ID_OBRA
+                WHERE S.ID_USUARIO = ${user}
+                `;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
     // if there is no error, you have the result
     res.send(result);
   });
@@ -234,10 +312,8 @@ exports.findUserDetails = (req, res) => {
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
-
     // if any error while executing above query, throw error
     if (err) throw new Error(err)
-
     // if there is no error, you have the result
     res.send(result[0]);
   });
@@ -252,10 +328,8 @@ exports.findEditorDetails = (req, res) => {
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
-
     // if any error while executing above query, throw error
     if (err) throw new Error(err)
-
     // if there is no error, you have the result
     res.send(result[0]);
   });
@@ -273,10 +347,8 @@ exports.checkUserPassword = (req, res) => {
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
-
     // if any error while executing above query, throw error
     if (err) throw new Error(err)
-
     // if there is no error, you have the result
     res.send(result);
   });
