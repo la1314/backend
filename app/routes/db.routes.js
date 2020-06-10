@@ -14,6 +14,7 @@ module.exports = (app) => {
     //Comprueba que el usuario ingresado existe -> type, username, email, password, phone
     app.post('/api/create-user/', dbU.createUser);
 
+    
     //Comprueba que el usuario ingresado existe -> user, type
     app.post('/api/check-user/', dbU.checkUser);
 
@@ -151,7 +152,6 @@ module.exports = (app) => {
 
     // Obtiene la media de una obra -> id
     app.post('/api/find-avg-obra/', withAuth, dbO.findAvgObra);
-
 
     /** Capítulos y paginas **/
 
