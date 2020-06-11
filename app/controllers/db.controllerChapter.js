@@ -60,10 +60,10 @@ exports.findInfoChapter = (req, res) => {
    * Nombre del capítulo
    * Fecha en la que fue lanzado
    */
-
+  
   const { chapter } = req.query
 
-  const query = `SELECT C.ID_CAPITULO AS ID, C.NOMBRE, C.NUMERO, DATE_FORMAT(FECHA, "%Y-%m-%d") AS FECHA, C.VISIBILIDAD
+  let query = `SELECT C.ID_CAPITULO AS ID, C.NOMBRE, C.NUMERO, DATE_FORMAT(FECHA, "%Y-%m-%d") AS FECHA, C.VISIBILIDAD
                    FROM CAPITULOS C
                    WHERE C.ID_CAPITULO = ${chapter}`;
 
@@ -88,9 +88,17 @@ exports.findChapters = (req, res) => {
    * ID de los capítulos que tenga una obra
    */
 
+  const { rol } = req;
   const { obra } = req.query;
 
-  const query = `SELECT L.ID_CAPITULO AS ID, L.NUMERO, L.NOMBRE FROM CAPITULOS L WHERE L.ID_OBRA = ${obra} ORDER BY L.NUMERO DESC`;
+
+  let query = `SELECT L.ID_CAPITULO AS ID, L.NUMERO, L.NOMBRE FROM CAPITULOS L WHERE L.ID_OBRA = ${obra} AND L.VISIBILIDAD = 1 ORDER BY L.NUMERO DESC`;
+
+  if (rol === 'EDITOR') {
+    query = `SELECT L.ID_CAPITULO AS ID, L.NUMERO, L.NOMBRE FROM CAPITULOS L WHERE L.ID_OBRA = ${obra} ORDER BY L.NUMERO DESC`;
+  }
+
+  
 
   // if there is no error, you have the result
   poolChapter.query(query, (err, result) => {

@@ -162,10 +162,10 @@ module.exports = (app) => {
     app.post('/api/find-info-caps/', dbC.findInfoCaps);
 
     // Devuelve los capitulos de una obra -> obra (id obra)
-    app.post('/api/find-chapters/', dbC.findChapters);
+    app.post('/api/find-chapters/', withAuth, dbC.findChapters);
 
     // Devuelve los capitulos de una obra -> obra (id obra)
-    app.post('/api/find-info-chapter/', dbC.findInfoChapter);
+    app.post('/api/find-info-chapter/', withAuth, dbC.findInfoChapter);
 
     // Devuelve los capitulos de una obra -> chapter (id capitulo)
     app.post('/api/find-chapter-pages/', dbC.findChaptersPages);
@@ -173,7 +173,7 @@ module.exports = (app) => {
     // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
     app.post('/api/add-chapter-pages/', withAuth, dbC.addChapterPages);
 
-    // Añade paginas un capitulo -> chapter (id capitulo), rutas, numeros
+    // Elimina paginas un capitulo -> chapter (id capitulo), rutas, numeros
     app.post('/api/delete-page/', withAuth, dbC.deletePage);
 
     // Edita dependiendo al valor de type los parámetros de un capítulo o pagina -> type, id, value

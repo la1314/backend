@@ -290,6 +290,7 @@ exports.findTop10 = (req, res) => {
                   FROM PUNTUAN P 
                   INNER JOIN OBRAS O ON O.ID_OBRA = P.ID_OBRA
                   INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
+                  WHERE O.VISIBILIDAD = 1
                   GROUP BY ID ORDER BY MEDIA DESC LIMIT 10`;
 
   // if there is no error, you have the result
@@ -311,7 +312,7 @@ exports.getNoLeidos = (req, res) => {
   LEFT JOIN SIGUEN S ON S.ID_OBRA = C.ID_OBRA
   LEFT JOIN LEEN L ON L.ID_CAPITULO = C.ID_CAPITULO AND L.ID_USUARIO = ${user}
   LEFT JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA
-  WHERE S.ID_USUARIO = ${user}
+  WHERE S.ID_USUARIO = ${user} AND O.VISIBILIDAD = 1 AND C.VISIBILIDAD = 1
   GROUP BY ID`;
 
   // if there is no error, you have the result
@@ -331,7 +332,7 @@ exports.getListFollow = (req, res) => {
   const query = `SELECT S.ID_OBRA AS ID, O.NOMBRE, O.COVER
                 FROM SIGUEN S
                 INNER JOIN OBRAS O ON O.ID_OBRA = S.ID_OBRA
-                WHERE S.ID_USUARIO = ${user}
+                WHERE S.ID_USUARIO = ${user} AND O.VISIBILIDAD = 1
                 `;
 
   // if there is no error, you have the result
@@ -690,7 +691,7 @@ exports.findLectorTipo = (req, res) => {
 // Obtiene las iniciales de las obras
 exports.findFirstLetra = (req, res) => {
 
-  const query = `SELECT DISTINCT LEFT(O.NOMBRE, 1) AS LETRA FROM OBRAS O ORDER BY O.NOMBRE`;
+  const query = `SELECT DISTINCT LEFT(O.NOMBRE, 1) AS LETRA FROM OBRAS O WHERE O.VISIBILIDAD = 1 ORDER BY O.NOMBRE`;
 
   // if there is no error, you have the result
   pool.query(query, (err, result) => {
@@ -710,7 +711,7 @@ exports.findObraByLetra = (req, res) => {
 
   const query = `SELECT O.ID_OBRA AS ID, O.NOMBRE, O.COVER , T.NOMBRE AS TIPO FROM OBRAS O 
   INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
-  WHERE O.NOMBRE LIKE '${letra}%'
+  WHERE O.NOMBRE LIKE '${letra}%' AND O.VISIBILIDAD = 1
   ORDER BY O.NOMBRE`;
 
   // if there is no error, you have the result
