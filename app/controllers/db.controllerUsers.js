@@ -66,7 +66,6 @@ exports.checkUser = (req, res) => {
 exports.generateToken = (req, res) => {
 
   // ID del usuario guardado dentro del token como iduser
-  //TODO Implementar rol
   const { user, password, type } = req.query;
 
   const query = toolF.devolverQueryGenerateToken(type, user, password)
@@ -307,11 +306,12 @@ exports.getNoLeidos = (req, res) => {
 
   const user = parseInt(req.user);
 
-  const query = `SELECT C.ID_OBRA AS ID, COUNT(DISTINCT C.ID_CAPITULO) AS TOTALCAPS, COUNT(DISTINCT L.ID_CAPITULO) AS LEIDOS, O.NOMBRE, O.COVER
+  const query = `SELECT C.ID_OBRA AS ID, COUNT(DISTINCT C.ID_CAPITULO) AS TOTALCAPS, COUNT(DISTINCT L.ID_CAPITULO) AS LEIDOS, O.NOMBRE, O.COVER, T.NOMBRE AS TIPO
   FROM CAPITULOS C
   LEFT JOIN SIGUEN S ON S.ID_OBRA = C.ID_OBRA
   LEFT JOIN LEEN L ON L.ID_CAPITULO = C.ID_CAPITULO AND L.ID_USUARIO = ${user}
   LEFT JOIN OBRAS O ON O.ID_OBRA = C.ID_OBRA
+  LEFT JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
   WHERE S.ID_USUARIO = ${user} AND O.VISIBILIDAD = 1 AND C.VISIBILIDAD = 1
   GROUP BY ID`;
 
@@ -329,9 +329,10 @@ exports.getListFollow = (req, res) => {
 
   const user = parseInt(req.user);
 
-  const query = `SELECT S.ID_OBRA AS ID, O.NOMBRE, O.COVER
+  const query = `SELECT S.ID_OBRA AS ID, O.NOMBRE, O.COVER, T.NOMBRE AS TIPO
                 FROM SIGUEN S
                 INNER JOIN OBRAS O ON O.ID_OBRA = S.ID_OBRA
+                INNER JOIN TIPO T ON T.ID_TIPO = O.ID_TIPO
                 WHERE S.ID_USUARIO = ${user} AND O.VISIBILIDAD = 1
                 `;
 
@@ -582,7 +583,7 @@ exports.checkReader = (req, res) => {
   });
 }
 
-// Se comprueba si el usuario tiene un reader
+// Crea un reader al usuario
 exports.createReader = (req, res) => {
 
   const user = parseInt(req.user);
@@ -602,7 +603,26 @@ exports.createReader = (req, res) => {
   });
 }
 
-// Se comprueba si el usuario tiene un reader
+// Elimina un reader al usuario
+exports.deleteReader = (req, res) => {
+
+  const user = parseInt(req.user);
+  const { tipo } = req.query;
+
+  const query =  `DELETE FROM READER WHERE ID_TIPO = ${tipo} AND ID_USUARIO = ${user}`;
+
+  // if there is no error, you have the result
+  pool.query(query, (err, result) => {
+
+    // if any error while executing above query, throw error
+    if (err) throw new Error(err)
+
+    // if there is no error, you have the result
+    res.send(result);
+  });
+}
+
+// Obtiene todos los lectores de un usuario
 exports.findLectores = (req, res) => {
 
   const user = parseInt(req.user);

@@ -14,7 +14,7 @@ module.exports = (app) => {
     //Comprueba que el usuario ingresado existe -> type, username, email, password, phone
     app.post('/api/create-user/', dbU.createUser);
 
-    
+
     //Comprueba que el usuario ingresado existe -> user, type
     app.post('/api/check-user/', dbU.checkUser);
 
@@ -51,13 +51,16 @@ module.exports = (app) => {
     //Edita la contraseña del Editor actual
     app.post('/api/edit-editor-password/', withAuth, dbU.editEditorPassword);
 
-    //Edita el phone ingresado -> tipo (id tipo)
+    // Se comprueba si el usuario tiene un reader
     app.post('/api/check-reader/', withAuth, dbU.checkReader);
 
-    //Edita el phone ingresado -> tipo (id tipo)
+    // Se comprueba si el usuario tiene un reader
     app.post('/api/create-reader/', withAuth, dbU.createReader);
 
-    //Edita el phone ingresado -> tipo (id tipo)
+    // Elimina un reader del usuario
+    app.post('/api/delete-reader/', withAuth, dbU.deleteReader);
+
+    // Obtiene todos los lectores de un usuario
     app.post('/api/find-lectores/', withAuth, dbU.findLectores);
 
     // Actualiza los valores de las columnas CASCADA y PAGINADA
@@ -230,14 +233,13 @@ module.exports = (app) => {
     //Obtiene las últimas 25 obras que han subido un nuevo capítulo
     app.post('/api/find-recientes/', withAuth, dbU.findRecientes);
 
-     // Buscar las 10 Obras con mejor media
-     app.post('/api/find-top-10/', withAuth, dbU.findTop10);
+    // Buscar las 10 Obras con mejor media
+    app.post('/api/find-top-10/', withAuth, dbU.findTop10);
 
     //Obtiene la lista de obras seguidas por el usuario
     app.post('/api/get-list-follow/', withAuth, dbU.getListFollow);
 
     //Obitne la lista de capitulos pendientes del usuario
-    //Obtiene la lista de obras seguidas por el usuario
     app.post('/api/get-no-leidos/', withAuth, dbU.getNoLeidos);
 
     //Comprueba si el capítulo ha sido leido por el usuario
